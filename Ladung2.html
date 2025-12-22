@@ -1,0 +1,1337 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arbeitsblatt – Ladung und Ladungsträger (interaktiv)</title>
+
+<!-- MathJax für saubere Rechnungen -->
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+<style>
+  html, body { height: 100%; }
+  body{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size:12pt;
+    line-height:1.35;
+    margin:2.2cm;
+    background: #f7f7f7;
+    position: relative;
+  }
+
+  /* Hintergrund-Layer (dezent) */
+  body::before{
+    content:"";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 18% 18%, rgba(0,0,0,0.08), transparent 33%),
+      radial-gradient(circle at 78% 28%, rgba(0,0,0,0.06), transparent 38%),
+      radial-gradient(circle at 30% 78%, rgba(0,0,0,0.05), transparent 45%),
+      radial-gradient(circle at 65% 70%, rgba(0,0,0,0.035), transparent 50%),
+
+      repeating-radial-gradient(circle at 25% 35%,
+        rgba(0,0,0,0.018) 0px, rgba(0,0,0,0.018) 1px,
+        transparent 10px, transparent 24px),
+      repeating-radial-gradient(circle at 78% 55%,
+        rgba(0,0,0,0.014) 0px, rgba(0,0,0,0.014) 1px,
+        transparent 12px, transparent 28px),
+
+      linear-gradient(to bottom, rgba(0,0,0,0.03), transparent 35%);
+    background-attachment: fixed;
+  }
+
+  /* Schneeflocken */
+  #snow{
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .page{
+    position: relative;
+    z-index: 2;
+  }
+
+  .header{border-bottom:1px solid #000; padding-bottom:0.2cm; margin-bottom:0.9cm;}
+  .header table{width:100%; border-collapse:collapse;}
+  .header td{font-weight:bold;}
+  .left{text-align:left;}
+  .center{text-align:center;}
+
+  h1{font-size:14pt; margin:0 0 0.2cm;}
+  .small{font-size:11pt; margin:0 0 0.7cm;}
+  .muted{color:#333;}
+
+  /* Aufgaben-Karten */
+  .task{
+    margin:0 0 0.95cm;
+    border: 1px solid rgba(0,0,0,0.16);
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.88);
+  }
+
+  /* Unterschiedliche, helle Hintergründe pro Aufgabe (1..8) */
+  .task:nth-of-type(1){ background: rgba(235, 246, 255, 0.88); }
+  .task:nth-of-type(2){ background: rgba(237, 255, 245, 0.88); }
+  .task:nth-of-type(3){ background: rgba(255, 244, 235, 0.88); }
+  .task:nth-of-type(4){ background: rgba(246, 240, 255, 0.88); }
+  .task:nth-of-type(5){ background: rgba(255, 252, 232, 0.88); }
+  .task:nth-of-type(6){ background: rgba(240, 249, 255, 0.88); }
+  .task:nth-of-type(7){ background: rgba(252, 240, 248, 0.88); }
+  .task:nth-of-type(8){ background: rgba(241, 255, 236, 0.88); }
+
+  .nr{font-weight:bold; display:inline-block; width:2em;}
+  .prompt{margin:0.2cm 0 0.25cm; font-style:italic;}
+
+  .mc label{display:block; margin:6px 0;}
+  .mc input{margin-right:8px;}
+
+  .btns{display:flex; gap:10px; margin:0.25cm 0; flex-wrap:wrap;}
+  button{font-size:12pt; padding:6px 12px; border:1px solid #000; background:#fff; cursor:pointer;}
+  button.smallbtn{font-size:11pt; padding:4px 10px;}
+
+  .feedback{margin-top:0.2cm; font-weight:bold;}
+  .ok{color:#0a7a2f;}
+  .bad{color:#b00020;}
+  .hint{font-size:11pt; font-weight:normal; color:#333;}
+
+  .solutionBtn{display:none; margin-top:0.15cm;}
+  .solution{display:none; border-top:1px solid #000; margin-top:0.25cm; padding-top:0.25cm;}
+  .solution h3{font-size:12pt; margin:0 0 0.15cm;}
+  .solution .small2{font-size:11pt;}
+  .solution ul{margin:0.15cm 0 0.15cm 1.1cm;}
+  .solution .calc{margin:0.2cm 0; padding:0.15cm 0.2cm; border:1px solid #000; background:#fff;}
+
+  .scorebox{
+    border-top:1px solid #000;
+    padding-top:0.5cm;
+    margin-top:0.7cm;
+    background: rgba(255,255,255,0.90);
+    padding-left:12px; padding-right:12px;
+    border:1px solid rgba(0,0,0,0.16);
+  }
+
+  /* Zuordnung / Lückentext */
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 10px 14px;
+    margin-top: 8px;
+    align-items:center;
+  }
+  .term{font-weight:bold;}
+  select{
+    font-size:12pt;
+    padding:4px 6px;
+    border:1px solid rgba(0,0,0,0.4);
+    background:#fff;
+    width:100%;
+    max-width: 720px;
+  }
+  .cloze{
+    margin-top: 8px;
+    padding: 8px 10px;
+    border: 1px solid rgba(0,0,0,0.18);
+    background: rgba(255,255,255,0.94);
+  }
+  .cloze-line{margin: 8px 0;}
+  .blank{display:inline-block; min-width: 180px; vertical-align: middle;}
+
+  /* Bild + Layout in Aufgabe 2 */
+  .taskTop{
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+    justify-content: space-between;
+  }
+  .taskText{flex: 1 1 auto; min-width: 240px;}
+
+  .taskImgWrap{
+    width: 320px;
+    max-width: 40%;
+    border: 1px solid rgba(0,0,0,0.12);
+    background: rgba(255,255,255,0.55);
+    padding: 6px;
+    max-height: 260px;
+  }
+  .taskImg{
+    width: 100%;
+    height: auto;
+    max-height: 248px;
+    object-fit: contain;
+    display:block;
+  }
+
+  /* Simulation Panel */
+  .simWrap{
+    margin-top: 10px;
+    border: 1px solid rgba(0,0,0,0.14);
+    background: rgba(255,255,255,0.78);
+    padding: 10px;
+  }
+  .simHead{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .simControls{
+    display:flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items:center;
+  }
+  .simControls label{font-size:11pt;}
+  input[type="range"]{width: 220px; max-width: 60vw;}
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding: 2px 8px;
+    border: 1px solid rgba(0,0,0,0.18);
+    background: rgba(255,255,255,0.75);
+    font-size: 11pt;
+  }
+  .simSvgBox{
+    margin-top: 10px;
+    border: 1px solid rgba(0,0,0,0.12);
+    background: rgba(255,255,255,0.72);
+    padding: 6px;
+    overflow: hidden;
+  }
+  .simNote{font-size:11pt; margin-top:6px; color:#333;}
+
+  @media (max-width: 900px){
+    .taskTop{flex-direction: column;}
+    .taskImgWrap{max-width: 100%; width: 100%;}
+  }
+
+  @media print{
+    body::before{display:none;}
+    #snow{display:none !important;}
+    button{display:none;}
+    .solutionBtn{display:none !important;}
+    .simWrap{display:none;} /* Simulation beim Drucken aus */
+  }
+</style>
+</head>
+
+<body>
+<canvas id="snow" aria-hidden="true"></canvas>
+
+<div class="page">
+  <div class="header">
+    <table>
+      <tr>
+        <td class="left">HBL</td>
+        <td class="center">Physik GK 11</td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+
+  <h1>Aufgaben zu „Ladung und Ladungsträger“</h1>
+  <p class="small">
+    <b>Regel:</b> Gezählt wird nur, ob eine Aufgabe <b>beim ersten Prüfen</b> richtig gelöst wurde. <br>
+    Wenn du eine Aufgabe <b>3× hintereinander falsch</b> prüfst, erscheint <b>„Lösungsweg anzeigen“</b>. <span class="muted">(Antwortreihenfolge ist pro Gerät gemischt.)</span>
+  </p>
+
+  <!-- ===================== 1 (MC Mehrfach) ===================== -->
+  <section class="task" data-task="1">
+    <div><span class="nr">1.</span>
+      <b>Nenne zwei Beobachtungen, die beim Kämmen der Haare auftreten, und erkläre kurz, wie sie mit elektrischer Ladung zusammenhängen.</b>
+    </div>
+    <div class="prompt">Mehrfachauswahl (3 Antworten richtig)</div>
+
+    <div class="mc" data-shuffle="t1">
+      <label><input type="checkbox" name="t1" value="d"> Papier wird angezogen, weil Papier immer dauerhaft negativ geladen ist.</label>
+      <label><input type="checkbox" name="t1" value="a"> Haare stehen ab, weil sich gleichnamig geladene Haarsträhnen abstoßen.</label>
+      <label><input type="checkbox" name="t1" value="e"> Haare stehen ab, weil sich das Erdmagnetfeld verändert.</label>
+      <label><input type="checkbox" name="t1" value="b"> Ein Kamm kann Papier anziehen, weil sich Ladungen im Papier trennen (Influenz).</label>
+      <label><input type="checkbox" name="t1" value="f"> Der Effekt hat nur mit Wärmeentwicklung durch Reibung zu tun, nicht mit Ladung.</label>
+      <label><input type="checkbox" name="t1" value="c"> Beim Kämmen werden durch Reibung Elektronen übertragen.</label>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkMulti(1,'t1',['a','b','c'])">Prüfen</button>
+      <button onclick="resetUI(1)">Zurücksetzen</button>
+    </div>
+
+    <div id="f1" class="feedback"></div>
+    <button id="sb1" class="solutionBtn" onclick="toggleSolution(1)">Lösungsweg anzeigen</button>
+
+    <div id="sol1" class="solution">
+      <h3>Lösungsweg (Aufgabe 1)</h3>
+      <div class="small2">
+        <ul>
+          <li><b>Beobachtungen:</b> Haare stehen ab; Kamm zieht leichte Gegenstände (z. B. Papier) an.</li>
+          <li><b>Reibung:</b> Beim Kämmen werden <b>Elektronen</b> zwischen Haaren und Kamm übertragen → beide werden <b>geladen</b>.</li>
+          <li><b>Abstoßung:</b> Viele Haarsträhnen tragen danach <b>gleichnamige Ladung</b> → sie <b>stoßen sich ab</b> → Haare stehen ab.</li>
+          <li><b>Influenz:</b> Neutraler Papierfetzen wird polarisiert (Ladungstrennung) → Netto-Anziehung zum geladenen Kamm.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 2 (Zuordnung + Bild + Simulation) ===================== -->
+  <section class="task" data-task="2">
+    <div class="taskTop">
+      <div class="taskText">
+        <div><span class="nr">2.</span>
+          <b>Beschreibe, wie ein Elektroskop funktioniert und wie man damit erkennt, dass ein Körper elektrisch geladen ist.</b>
+        </div>
+        <div class="prompt">Zuordnung (3 Zuordnungen richtig) — wähle zu jedem Begriff die passende Beschreibung</div>
+      </div>
+
+      <div class="taskImgWrap" title="Elektroskop">
+        <img class="taskImg"
+             src="https://l1neback3r.github.io/elektrisches-Feld/Elektroskop.png"
+             alt="">
+      </div>
+    </div>
+
+    <!-- Simulation -->
+    <div class="simWrap">
+      <div class="simHead">
+        <b>Mini-Simulation: Stab nähert sich dem Elektroskop</b>
+        <div class="simControls">
+          <span class="pill">
+            Stab:
+            <button class="smallbtn" onclick="simSetSign(+1)">positiv</button>
+            <button class="smallbtn" onclick="simSetSign(-1)">negativ</button>
+          </span>
+
+          <label class="pill">
+            Abstand
+            <input id="simDist" type="range" min="40" max="240" value="160" oninput="simSetDistance(this.value)">
+          </label>
+
+          <button class="smallbtn" onclick="simTouch()">Berühren</button>
+          <button class="smallbtn" onclick="simGround()">Erden/Entladen</button>
+          <button class="smallbtn" onclick="simReset()">Reset</button>
+        </div>
+      </div>
+
+      <div class="simSvgBox">
+        <svg id="simSvg" viewBox="0 0 600 220" width="100%" height="220" aria-hidden="true">
+          <!-- Hintergrund -->
+          <rect x="0" y="0" width="600" height="220" fill="rgba(0,0,0,0.02)"/>
+
+          <!-- Stab (links) -->
+          <g id="rodGroup">
+            <rect id="rod" x="40" y="60" width="30" height="100" rx="8" fill="rgba(0,0,0,0.28)"/>
+            <!-- kleine "Ladungswolke" -->
+            <g id="rodDots" opacity="0.25" fill="rgba(0,0,0,0.55)">
+              <circle cx="55" cy="75" r="3"/>
+              <circle cx="55" cy="95" r="2.5"/>
+              <circle cx="55" cy="115" r="3"/>
+              <circle cx="55" cy="135" r="2.5"/>
+              <circle cx="55" cy="155" r="3"/>
+            </g>
+          </g>
+
+          <!-- Elektroskop -->
+          <g id="scope" stroke="rgba(0,0,0,0.55)" stroke-width="4" fill="none" stroke-linecap="round">
+            <!-- Stiel -->
+            <line x1="380" y1="70" x2="380" y2="150"/>
+            <!-- Gehäuse -->
+            <line x1="340" y1="150" x2="420" y2="150"/>
+            <line x1="350" y1="150" x2="360" y2="205"/>
+            <line x1="410" y1="150" x2="400" y2="205"/>
+          </g>
+
+          <!-- Kopf (Kugel) -->
+          <circle cx="380" cy="55" r="18" fill="rgba(0,0,0,0.18)"/>
+          <circle cx="380" cy="55" r="9" fill="rgba(0,0,0,0.42)"/>
+
+          <!-- Blättchen (drehbar) -->
+          <g id="leaves" stroke="rgba(0,0,0,0.55)" stroke-width="4" stroke-linecap="round">
+            <!-- Drehpunkt -->
+            <circle cx="380" cy="150" r="4" fill="rgba(0,0,0,0.55)"/>
+            <line id="leafL" x1="380" y1="150" x2="352" y2="205"/>
+            <line id="leafR" x1="380" y1="150" x2="408" y2="205"/>
+          </g>
+
+          <!-- kleine Ladungspunkte am Elektroskop (nur optisch) -->
+          <g id="scopeDots" opacity="0.18" fill="rgba(0,0,0,0.55)">
+            <circle cx="380" cy="55" r="2.5"/>
+            <circle cx="370" cy="60" r="2.2"/>
+            <circle cx="390" cy="60" r="2.2"/>
+            <circle cx="375" cy="150" r="2.2"/>
+            <circle cx="385" cy="150" r="2.2"/>
+          </g>
+        </svg>
+      </div>
+
+      <div id="simReadout" class="simNote"></div>
+    </div>
+
+    <!-- Zuordnung -->
+    <div class="grid">
+      <div class="term">Influenz (Annäherung)</div>
+      <div>
+        <select name="t2_m1">
+          <option value="">– bitte auswählen –</option>
+          <option value="A">Die Blättchen spreizen sich, weil sie entgegengesetzt geladen sind und sich anziehen.</option>
+          <option value="B">Bei Annäherung eines geladenen Körpers werden Ladungen im Elektroskop umverteilt.</option>
+          <option value="C">Ein Elektroskop misst direkt die Stromstärke über die Blattspreizung.</option>
+          <option value="D">Bei Berührung kann Ladung übertragen werden; die Spreizung kann bestehen bleiben.</option>
+          <option value="E">Die Blättchen spreizen sich durch Abstoßung gleichnamiger Ladungen.</option>
+        </select>
+      </div>
+
+      <div class="term">Abstoßung (Blättchen)</div>
+      <div>
+        <select name="t2_m2">
+          <option value="">– bitte auswählen –</option>
+          <option value="A">Bei Berührung kann Ladung übertragen werden; die Spreizung kann bestehen bleiben.</option>
+          <option value="B">Bei Annäherung eines geladenen Körpers werden Ladungen im Elektroskop umverteilt.</option>
+          <option value="C">Die Blättchen spreizen sich durch Abstoßung gleichnamiger Ladungen.</option>
+          <option value="D">Ein Elektroskop zeigt nur Magnetfelder an, keine elektrische Ladung.</option>
+          <option value="E">Die Blättchen spreizen sich, weil sie entgegengesetzt geladen sind und sich anziehen.</option>
+        </select>
+      </div>
+
+      <div class="term">Berührung (Kontakt)</div>
+      <div>
+        <select name="t2_m3">
+          <option value="">– bitte auswählen –</option>
+          <option value="A">Bei Berührung kann Ladung übertragen werden; die Spreizung kann dann bestehen bleiben.</option>
+          <option value="B">Die Blättchen spreizen sich, weil sie entgegengesetzt geladen sind und sich anziehen.</option>
+          <option value="C">Ein Elektroskop misst nur die Stromstärke, nicht Ladung.</option>
+          <option value="D">Die Spreizung entsteht ausschließlich durch Luftströmungen.</option>
+          <option value="E">Influenz bedeutet: Protonen wandern im Metall nach oben.</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkMatch(2, {m1:'B', m2:'C', m3:'A'})">Prüfen</button>
+      <button onclick="resetUI(2)">Zurücksetzen</button>
+    </div>
+
+    <div id="f2" class="feedback"></div>
+    <button id="sb2" class="solutionBtn" onclick="toggleSolution(2)">Lösungsweg anzeigen</button>
+
+    <div id="sol2" class="solution">
+      <h3>Lösungsweg (Aufgabe 2)</h3>
+      <div class="small2">
+        <ul>
+          <li><b>Influenz:</b> Ein geladener Körper in der Nähe verschiebt Ladungen im Elektroskop → Umverteilung.</li>
+          <li><b>Abstoßung:</b> Die Blättchen tragen dann <b>gleiches Vorzeichen</b> → Abstoßung → Spreizung.</li>
+          <li><b>Berührung:</b> Bei Kontakt kann Ladung übertragen werden → Spreizung kann bleiben (bis Ladung abfließt).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 3 (Lückentext) ===================== -->
+  <section class="task" data-task="3">
+    <div><span class="nr">3.</span>
+      <b>Erkläre, warum die pendelnde Metallkugel im Hochspannungs-Stromkreis abwechselnd positiv und negativ geladen wird.</b>
+    </div>
+    <div class="prompt">Lückentext mit Wortbank (6 Lücken richtig)</div>
+
+    <div class="cloze">
+      <div class="cloze-line">
+        Beim Kontakt mit einer Elektrode nimmt die Metallkugel
+        <span class="blank">
+          <select name="t3_b1">
+            <option value="">– auswählen –</option>
+            <option value="Elektronen">Elektronen</option>
+            <option value="Protonen">Protonen</option>
+            <option value="Neutronen">Neutronen</option>
+            <option value="Lichtquanten">Lichtquanten</option>
+          </select>
+        </span>
+        auf oder gibt
+        <span class="blank">
+          <select name="t3_b2">
+            <option value="">– auswählen –</option>
+            <option value="Elektronen">Elektronen</option>
+            <option value="Protonen">Protonen</option>
+            <option value="Wärme">Wärme</option>
+            <option value="Druck">Druck</option>
+          </select>
+        </span>
+        ab.
+      </div>
+
+      <div class="cloze-line">
+        Danach trägt sie ein bestimmtes Ladungs-
+        <span class="blank">
+          <select name="t3_b3">
+            <option value="">– auswählen –</option>
+            <option value="Vorzeichen">Vorzeichen</option>
+            <option value="Volumen">Volumen</option>
+            <option value="Gewicht">Gewicht</option>
+            <option value="Farbe">Farbe</option>
+          </select>
+        </span>
+        und wird von der gleichnamigen Elektrode
+        <span class="blank">
+          <select name="t3_b4">
+            <option value="">– auswählen –</option>
+            <option value="abgestoßen">abgestoßen</option>
+            <option value="angezogen">angezogen</option>
+            <option value="abgekühlt">abgekühlt</option>
+            <option value="magnetisiert">magnetisiert</option>
+          </select>
+        </span>
+        .
+      </div>
+
+      <div class="cloze-line">
+        Zur anderen Elektrode wird sie dagegen
+        <span class="blank">
+          <select name="t3_b5">
+            <option value="">– auswählen –</option>
+            <option value="angezogen">angezogen</option>
+            <option value="abgestoßen">abgestoßen</option>
+            <option value="unsichtbar">unsichtbar</option>
+            <option value="erwärmt">erwärmt</option>
+          </select>
+        </span>
+        und beim nächsten Kontakt werden Elektronen in die andere Richtung übertragen, sodass das
+        <span class="blank">
+          <select name="t3_b6">
+            <option value="">– auswählen –</option>
+            <option value="Vorzeichen">Vorzeichen</option>
+            <option value="Material">Material</option>
+            <option value="Volumen">Volumen</option>
+            <option value="Ort">Ort</option>
+          </select>
+        </span>
+        wechselt.
+      </div>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkCloze(3, {b1:'Elektronen', b2:'Elektronen', b3:'Vorzeichen', b4:'abgestoßen', b5:'angezogen', b6:'Vorzeichen'})">Prüfen</button>
+      <button onclick="resetUI(3)">Zurücksetzen</button>
+    </div>
+
+    <div id="f3" class="feedback"></div>
+    <button id="sb3" class="solutionBtn" onclick="toggleSolution(3)">Lösungsweg anzeigen</button>
+
+    <div id="sol3" class="solution">
+      <h3>Lösungsweg (Aufgabe 3)</h3>
+      <div class="small2">
+        <ul>
+          <li>Die Metallkugel ist ein <b>Leiter</b>. In Leitern können sich <b>Elektronen</b> bewegen.</li>
+          <li>Beim <b>Kontakt</b> mit einer Elektrode werden <b>Elektronen übertragen</b> (je nach Potential).</li>
+          <li>Die Kugel hat danach ein <b>Vorzeichen</b>. Gleichnamige Ladungen <b>stoßen sich ab</b> → weg von dieser Elektrode.</li>
+          <li>Zur anderen Elektrode wird sie <b>angezogen</b>. Beim nächsten Kontakt fließen Elektronen anders herum → <b>Vorzeichenwechsel</b>.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 4 (MC Single) ===================== -->
+  <section class="task" data-task="4">
+    <div><span class="nr">4.</span>
+      <b>Berechne die mittlere Stromstärke, wenn eine Ladung von 18 nC in einer Zeit von 0,120 s übertragen wird.</b>
+    </div>
+    <div class="prompt">Einfachauswahl (1 Antwort richtig)</div>
+
+    <div class="mc" data-shuffle="t4">
+      <label><input type="radio" name="t4" value="c"> 6,7·10⁻⁸ A</label>
+      <label><input type="radio" name="t4" value="a"> 1,5·10⁻⁷ A</label>
+      <label><input type="radio" name="t4" value="d"> 2,2·10⁻⁶ A</label>
+      <label><input type="radio" name="t4" value="e"> 1,5·10⁷ A</label>
+      <label><input type="radio" name="t4" value="b"> 1,5·10⁻¹⁰ A</label>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkSingle(4,'t4','a')">Prüfen</button>
+      <button onclick="resetUI(4)">Zurücksetzen</button>
+    </div>
+
+    <div id="f4" class="feedback"></div>
+    <button id="sb4" class="solutionBtn" onclick="toggleSolution(4)">Lösungsweg anzeigen</button>
+
+    <div id="sol4" class="solution">
+      <h3>Lösungsweg (Aufgabe 4)</h3>
+      <div class="small2">
+        <div><b>Formel:</b></div>
+        <div class="calc">\[\; I=\frac{Q}{t} \;\]</div>
+        <div class="calc">
+          \[
+            Q = 18\,\text{nC} = 18\cdot 10^{-9}\,\text{C},\qquad
+            t = 0{,}120\,\text{s}
+          \]
+        </div>
+        <div class="calc">
+          \[
+            I=\frac{18\cdot 10^{-9}}{0{,}120}\,\text{A}
+            = 150\cdot 10^{-9}\,\text{A}
+            = 1{,}5\cdot 10^{-7}\,\text{A}
+          \]
+        </div>
+        <div><b>Ergebnis:</b> \(I=1{,}5\cdot10^{-7}\,\text{A}\)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 5 (MC Mehrfach) ===================== -->
+  <section class="task" data-task="5">
+    <div><span class="nr">5.</span>
+      <b>Beschreibe einen Vorgang aus dem Alltag, bei dem elektrische Ladungen übertragen werden.
+      Erläutere, welche Körper beteiligt sind, wie die Ladungsübertragung abläuft und welche beobachtbaren Effekte auftreten.</b>
+    </div>
+    <div class="prompt">Mehrfachauswahl (4 Antworten richtig)</div>
+
+    <div class="mc" data-shuffle="t5">
+      <label><input type="checkbox" name="t5" value="d"> Ein Funke entsteht nur, wenn ein Körper vorher magnetisiert wurde.</label>
+      <label><input type="checkbox" name="t5" value="a"> Reibung (z. B. Kleidung–Autositz / Schuh–Teppich) kann Elektronen übertragen.</label>
+      <label><input type="checkbox" name="t5" value="f"> Bei einer Entladung springen Protonen durch die Luft zum anderen Körper.</label>
+      <label><input type="checkbox" name="t5" value="b"> Ein Knacken/Funke beim Anfassen ist ein schneller Ladungsausgleich (Entladung).</label>
+      <label><input type="checkbox" name="t5" value="e"> Trockene Luft begünstigt Entladungen, weil Ladung schlechter „abfließen“ kann.</label>
+      <label><input type="checkbox" name="t5" value="c"> Metalle leiten gut; dadurch kann Ladung beim Berühren schnell verteilt/abgeführt werden.</label>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkMulti(5,'t5',['a','b','c','e'])">Prüfen</button>
+      <button onclick="resetUI(5)">Zurücksetzen</button>
+    </div>
+
+    <div id="f5" class="feedback"></div>
+    <button id="sb5" class="solutionBtn" onclick="toggleSolution(5)">Lösungsweg anzeigen</button>
+
+    <div id="sol5" class="solution">
+      <h3>Lösungsweg (Aufgabe 5)</h3>
+      <div class="small2">
+        <ul>
+          <li><b>Reibung</b> kann Elektronen übertragen → Körper werden geladen.</li>
+          <li>Beim Berühren eines Metalls kommt es zu schnellem <b>Ladungsausgleich</b> → Knacken/Funke.</li>
+          <li><b>Trockene Luft</b> begünstigt das (Ladung fließt schlechter ab).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 6 (MC Single) ===================== -->
+  <section class="task" data-task="6">
+    <div><span class="nr">6.</span>
+      <b>Eine Stromstärke von 2,5·10⁻⁶ A wirkt auf eine Metallkugel. Wie lange dauert es, bis eine Ladung von 32 nC übertragen wurde?</b>
+    </div>
+    <div class="prompt">Einfachauswahl (1 Antwort richtig)</div>
+
+    <div class="mc" data-shuffle="t6">
+      <label><input type="radio" name="t6" value="c"> 12,8 s</label>
+      <label><input type="radio" name="t6" value="a"> 0,0128 s</label>
+      <label><input type="radio" name="t6" value="e"> 0,0128 s ist unmöglich, weil nC keine Einheit für Ladung ist.</label>
+      <label><input type="radio" name="t6" value="b"> 0,128 s</label>
+      <label><input type="radio" name="t6" value="d"> 1,28·10⁻⁶ s</label>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkSingle(6,'t6','a')">Prüfen</button>
+      <button onclick="resetUI(6)">Zurücksetzen</button>
+    </div>
+
+    <div id="f6" class="feedback"></div>
+    <button id="sb6" class="solutionBtn" onclick="toggleSolution(6)">Lösungsweg anzeigen</button>
+
+    <div id="sol6" class="solution">
+      <h3>Lösungsweg (Aufgabe 6)</h3>
+      <div class="small2">
+        <div class="calc">\[\; t=\frac{Q}{I} \;\]</div>
+        <div class="calc">
+          \[
+            Q=32\,\text{nC}=32\cdot10^{-9}\,\text{C},\qquad
+            I=2{,}5\cdot10^{-6}\,\text{A}
+          \]
+        </div>
+        <div class="calc">
+          \[
+            t=\frac{32\cdot10^{-9}}{2{,}5\cdot10^{-6}}\,\text{s}
+            =0{,}0128\,\text{s}
+          \]
+        </div>
+        <div><b>Ergebnis:</b> \(t=0{,}0128\,\text{s}\)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 7 (MC Single) ===================== -->
+  <section class="task" data-task="7">
+    <div><span class="nr">7.</span>
+      <b>Durch Reibung werden 4,5·10⁹ Elektronen von einem Kunststoffstab auf ein Tuch übertragen. Berechne die insgesamt übertragene Ladung.</b>
+    </div>
+    <div class="prompt">Einfachauswahl (1 Antwort richtig)</div>
+
+    <div class="mc" data-shuffle="t7">
+      <label><input type="radio" name="t7" value="b"> +7,2·10⁻¹⁰ C</label>
+      <label><input type="radio" name="t7" value="e"> −2,8·10⁻⁹ C</label>
+      <label><input type="radio" name="t7" value="a"> −7,2·10⁻¹⁰ C</label>
+      <label><input type="radio" name="t7" value="d"> −7,2·10⁻¹⁰ A</label>
+      <label><input type="radio" name="t7" value="c"> −7,2·10⁻⁹ C</label>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkSingle(7,'t7','a')">Prüfen</button>
+      <button onclick="resetUI(7)">Zurücksetzen</button>
+    </div>
+
+    <div id="f7" class="feedback"></div>
+    <button id="sb7" class="solutionBtn" onclick="toggleSolution(7)">Lösungsweg anzeigen</button>
+
+    <div id="sol7" class="solution">
+      <h3>Lösungsweg (Aufgabe 7)</h3>
+      <div class="small2">
+        <div class="calc">\[\; Q = n\cdot(-e) \;\]</div>
+        <div class="calc">
+          \[
+            Q=4{,}5\cdot10^{9}\cdot(-1{,}60\cdot10^{-19})\,\text{C}
+            =-7{,}2\cdot10^{-10}\,\text{C}
+          \]
+        </div>
+        <div><b>Ergebnis:</b> \(Q=-7{,}2\cdot10^{-10}\,\text{C}\)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 8 (MC Mehrfach) ===================== -->
+  <section class="task" data-task="8">
+    <div><span class="nr">8.</span>
+      <b>Eine metallische Kugel besitzt eine Ladung von −1,0 nC. Ein Elektron trägt die Ladung −e mit e = 1,60·10⁻¹⁹ C. Berechne die Anzahl der zusätzlichen Elektronen, die sich auf der Kugel befinden.</b>
+    </div>
+    <div class="prompt">Mehrfachauswahl (4 Antworten richtig)</div>
+
+    <div class="mc" data-shuffle="t8">
+      <label><input type="checkbox" name="t8" value="f"> Die Anzahl zusätzlicher Elektronen muss negativ sein, weil Q negativ ist.</label>
+      <label><input type="checkbox" name="t8" value="c"> 1,0 nC = 1,0·10⁻⁹ C.</label>
+      <label><input type="checkbox" name="t8" value="a"> Negative Ladung bedeutet Elektronenüberschuss (zusätzliche Elektronen).</label>
+      <label><input type="checkbox" name="t8" value="e"> Negative Ladung bedeutet Protonenüberschuss.</label>
+      <label><input type="checkbox" name="t8" value="d"> Anzahl zusätzlicher Elektronen: 6,25·10⁹.</label>
+      <label><input type="checkbox" name="t8" value="b"> Für die Anzahl gilt: n = |Q| / e.</label>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkMulti(8,'t8',['a','b','c','d'])">Prüfen</button>
+      <button onclick="resetUI(8)">Zurücksetzen</button>
+    </div>
+
+    <div id="f8" class="feedback"></div>
+    <button id="sb8" class="solutionBtn" onclick="toggleSolution(8)">Lösungsweg anzeigen</button>
+
+    <div id="sol8" class="solution">
+      <h3>Lösungsweg (Aufgabe 8)</h3>
+      <div class="small2">
+        <div class="calc">\[\; Q=-1{,}0\,\text{nC}=-1{,}0\cdot10^{-9}\,\text{C} \;\]</div>
+        <div class="calc">
+          \[
+            n=\frac{|Q|}{e}
+            =\frac{1{,}0\cdot10^{-9}}{1{,}60\cdot10^{-19}}
+            =6{,}25\cdot10^{9}
+          \]
+        </div>
+        <div><b>Ergebnis:</b> \(n=6{,}25\cdot10^{9}\) zusätzliche Elektronen.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="scorebox">
+    <div class="btns">
+      <button onclick="showScore()">Ergebnis anzeigen</button>
+      <button onclick="lockAfterFirstAttemptInfo()">Info</button>
+      <button onclick="resetAll()">Alles zurücksetzen (inkl. Speicher)</button>
+    </div>
+    <div id="score" class="feedback" style="margin-top:0.3cm;"></div>
+    <div id="info" class="hint" style="margin-top:0.2cm;"></div>
+  </div>
+</div>
+
+<script>
+/* ==================== Speicherung (LocalStorage) ==================== */
+const STORE_KEY = "hbl_physik_ladung_ab1_v2";
+
+/* Erstversuchs-Wertung + Fehlstrecken */
+const attempted = {};
+const firstCorrect = {};
+const wrongStreak = {};
+const solutionUnlocked = {};
+const feedbackCache = {}; // { n: {text, okClass} }
+
+/* Seed für Shuffle */
+let seed = null;
+
+/* Simulation State */
+const simState = {
+  rodSign: +1,
+  distance: 160,
+  netCharge: 0
+};
+
+function saveState(){
+  const data = {
+    seed,
+    attempted, firstCorrect, wrongStreak, solutionUnlocked, feedbackCache,
+    inputs: snapshotInputs(),
+    selects: snapshotSelects(),
+    sim: simState
+  };
+  try{
+    localStorage.setItem(STORE_KEY, JSON.stringify(data));
+  }catch(e){}
+}
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return null;
+    return JSON.parse(raw);
+  }catch(e){ return null; }
+}
+
+function snapshotInputs(){
+  // Speichere pro name: array von checked values (auch bei radio: 0/1)
+  const result = {};
+  const names = new Set([...document.querySelectorAll('input[name]')].map(i=>i.name));
+  for(const n of names){
+    const checked = [...document.querySelectorAll('input[name="'+n+'"]:checked')].map(x=>x.value).sort();
+    result[n] = checked;
+  }
+  return result;
+}
+
+function snapshotSelects(){
+  const result = {};
+  document.querySelectorAll('select[name]').forEach(s => result[s.name] = s.value);
+  return result;
+}
+
+function applyInputs(saved){
+  if(!saved) return;
+  for(const [name, arr] of Object.entries(saved)){
+    const set = new Set(arr || []);
+    document.querySelectorAll('input[name="'+name+'"]').forEach(inp => {
+      inp.checked = set.has(inp.value);
+    });
+  }
+}
+
+function applySelects(saved){
+  if(!saved) return;
+  for(const [name, val] of Object.entries(saved)){
+    const sel = document.querySelector('select[name="'+name+'"]');
+    if(sel) sel.value = val;
+  }
+}
+
+function applyFeedback(){
+  for(const [k,v] of Object.entries(feedbackCache)){
+    const n = Number(k);
+    const el = document.getElementById('f'+n);
+    if(el && v && typeof v.text === "string"){
+      el.textContent = v.text;
+      el.className = 'feedback ' + (v.okClass || '');
+    }
+  }
+  for(const [k,unlocked] of Object.entries(solutionUnlocked)){
+    const n = Number(k);
+    if(unlocked){
+      const b = document.getElementById('sb'+n);
+      if(b) b.style.display = 'inline-block';
+    }
+  }
+}
+
+/* Auto-Save Hooks */
+let saveTimer = null;
+function scheduleSave(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveState, 120);
+}
+function attachAutoSave(){
+  document.querySelectorAll('input, select').forEach(el=>{
+    el.addEventListener('change', scheduleSave);
+    el.addEventListener('input', scheduleSave);
+  });
+}
+
+/* ==================== Shuffle (Antworten mischen) ==================== */
+/* Mulberry32 PRNG */
+function mulberry32(a){
+  return function(){
+    let t = a += 0x6D2B79F5;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  }
+}
+
+function ensureSeed(){
+  const st = loadState();
+  if(st && typeof st.seed === "number"){
+    seed = st.seed;
+    return;
+  }
+  // einmalig erzeugen und speichern
+  seed = Math.floor(Math.random()*1e9);
+  saveState();
+}
+
+function shuffleArray(arr, rnd){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(rnd()*(i+1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+function shuffleMCBlocks(){
+  const blocks = document.querySelectorAll('.mc[data-shuffle]');
+  // pro Block einen eigenen deterministischen Random-Stream
+  blocks.forEach((block, idx)=>{
+    const rnd = mulberry32((seed + 1013*(idx+1)) >>> 0);
+    const labels = [...block.querySelectorAll('label')];
+    // gemischt wieder einfügen
+    shuffleArray(labels, rnd);
+    labels.forEach(l => block.appendChild(l));
+  });
+}
+
+/* ==================== Feedback/Check-Logik ==================== */
+function ensureInit(n){
+  if(!(n in wrongStreak)) wrongStreak[n] = 0;
+  if(!(n in solutionUnlocked)) solutionUnlocked[n] = false;
+}
+
+function cacheFeedback(n, ok, isFirst, msg){
+  const cls = ok ? 'ok' : 'bad';
+  feedbackCache[n] = { text: msg, okClass: cls };
+}
+
+function setNeedAnswer(n){
+  const el=document.getElementById('f'+n);
+  el.className='feedback bad';
+  el.textContent='Bitte wähle zuerst eine Antwort aus.';
+  cacheFeedback(n, false, false, el.textContent);
+  scheduleSave();
+}
+
+function setFeedback(n, ok, isFirst, msg){
+  const el = document.getElementById('f'+n);
+  el.className = 'feedback ' + (ok ? 'ok' : 'bad');
+  let text = msg ?? (ok ? 'Richtig ✅' : 'Falsch ❌');
+  if(!isFirst) text += '  (Wertung bereits festgelegt)';
+  el.textContent = text;
+  cacheFeedback(n, ok, isFirst, text);
+  scheduleSave();
+}
+
+function getChecked(name){
+  return [...document.querySelectorAll('input[name="'+name+'"]:checked')]
+    .map(x=>x.value).sort();
+}
+
+function afterCheck(n, ok){
+  ensureInit(n);
+  if(ok){
+    wrongStreak[n] = 0;
+  }else{
+    wrongStreak[n] += 1;
+    if(wrongStreak[n] >= 3 && !solutionUnlocked[n]){
+      solutionUnlocked[n] = true;
+      const b = document.getElementById('sb'+n);
+      if(b) b.style.display = 'inline-block';
+    }
+  }
+  scheduleSave();
+}
+
+function checkMulti(n, name, correct){
+  const chosen = getChecked(name);
+  if(chosen.length === 0){ setNeedAnswer(n); return; }
+
+  const correctSet = new Set(correct);
+  let right = 0;
+  for(const v of chosen){ if(correctSet.has(v)) right++; }
+  const wrong = chosen.length - right;
+  const missing = correct.length - right;
+  const ok = (wrong === 0 && missing === 0);
+
+  const isFirst = !(n in attempted);
+  if(isFirst){ attempted[n] = true; firstCorrect[n] = ok; }
+
+  let msg = '';
+  const expected = correct.length;
+
+  if(chosen.length === 1){
+    msg = (right === 1) ? 'Diese Auswahl ist korrekt.' : 'Diese Auswahl ist nicht korrekt.';
+    msg += ' (Mehrfachauswahl: insgesamt ' + expected + ' richtige Antworten.)';
+  } else if(ok){
+    msg = 'Richtig ✅';
+  } else {
+    msg = 'Teilweise richtig: ' + right + ' richtig, ' + wrong + ' falsch gewählt';
+    if(missing > 0) msg += ', ' + missing + ' richtig(e) fehlt/fehlen';
+    msg += '. (Ausgewählt: ' + chosen.length + ', erwartet: ' + expected + ' richtige.)';
+  }
+
+  setFeedback(n, ok, isFirst, msg);
+  afterCheck(n, ok);
+  if(solutionUnlocked[n] && window.MathJax) MathJax.typesetPromise();
+  saveState();
+}
+
+function checkSingle(n, name, correct){
+  const chosen = getChecked(name);
+  if(chosen.length===0){ setNeedAnswer(n); return; }
+  const ok = (chosen.length===1 && chosen[0]===correct);
+
+  const isFirst = !(n in attempted);
+  if(isFirst){ attempted[n]=true; firstCorrect[n]=ok; }
+
+  setFeedback(n, ok, isFirst, ok ? 'Richtig ✅' : 'Falsch ❌');
+  afterCheck(n, ok);
+  if(solutionUnlocked[n] && window.MathJax) MathJax.typesetPromise();
+  saveState();
+}
+
+function checkMatch(n, key){
+  const v1 = document.querySelector('select[name="t2_m1"]').value;
+  const v2 = document.querySelector('select[name="t2_m2"]').value;
+  const v3 = document.querySelector('select[name="t2_m3"]').value;
+
+  if(v1==='' || v2==='' || v3===''){
+    const el=document.getElementById('f'+n);
+    el.className='feedback bad';
+    el.textContent='Bitte fülle alle Zuordnungen aus.';
+    cacheFeedback(n, false, false, el.textContent);
+    scheduleSave();
+    return;
+  }
+
+  let correctCount = 0;
+  if(v1 === key.m1) correctCount++;
+  if(v2 === key.m2) correctCount++;
+  if(v3 === key.m3) correctCount++;
+
+  const ok = (correctCount === 3);
+
+  const isFirst = !(n in attempted);
+  if(isFirst){ attempted[n]=true; firstCorrect[n]=ok; }
+
+  const msg = ok ? 'Richtig ✅' : ('Teilweise richtig: ' + correctCount + ' / 3 Zuordnungen korrekt.');
+  setFeedback(n, ok, isFirst, msg);
+  afterCheck(n, ok);
+  if(solutionUnlocked[n] && window.MathJax) MathJax.typesetPromise();
+  saveState();
+}
+
+function checkCloze(n, key){
+  const blanks = ['b1','b2','b3','b4','b5','b6'];
+  let filled = 0, correctCount = 0;
+
+  for(const b of blanks){
+    const sel = document.querySelector('select[name="t3_'+b+'"]');
+    const val = sel.value;
+    if(val !== '') filled++;
+    if(val === key[b]) correctCount++;
+  }
+
+  if(filled < blanks.length){
+    const el=document.getElementById('f'+n);
+    el.className='feedback bad';
+    el.textContent='Bitte fülle alle Lücken aus.';
+    cacheFeedback(n, false, false, el.textContent);
+    scheduleSave();
+    return;
+  }
+
+  const ok = (correctCount === blanks.length);
+
+  const isFirst = !(n in attempted);
+  if(isFirst){ attempted[n]=true; firstCorrect[n]=ok; }
+
+  const msg = ok ? 'Richtig ✅' : ('Teilweise richtig: ' + correctCount + ' / ' + blanks.length + ' Lücken korrekt.');
+  setFeedback(n, ok, isFirst, msg);
+  afterCheck(n, ok);
+  if(solutionUnlocked[n] && window.MathJax) MathJax.typesetPromise();
+  saveState();
+}
+
+function resetUI(n){
+  const sec=document.querySelector('section[data-task="'+n+'"]');
+  sec.querySelectorAll('input').forEach(i=>i.checked=false);
+  sec.querySelectorAll('select').forEach(s=>s.value='');
+
+  const f=document.getElementById('f'+n);
+  if(f){ f.textContent=''; f.className='feedback'; }
+  delete feedbackCache[n];
+  scheduleSave();
+}
+
+function toggleSolution(n){
+  const sol=document.getElementById('sol'+n);
+  sol.style.display = (sol.style.display==='block') ? 'none' : 'block';
+  if(window.MathJax) MathJax.typesetPromise();
+}
+
+function showScore(){
+  let correctFirst=0, done=0;
+  for(let i=1;i<=8;i++){
+    if(attempted[i]) done++;
+    if(firstCorrect[i]) correctFirst++;
+  }
+  const s=document.getElementById('score');
+  s.className='feedback';
+  s.textContent='Beim ersten Versuch richtig: '+correctFirst+' / 8   (bereits geprüft: '+done+' / 8)';
+  scheduleSave();
+}
+
+function lockAfterFirstAttemptInfo(){
+  document.getElementById('info').textContent =
+    'Hinweis: „Zurücksetzen“ löscht nur die Auswahl/Anzeige. Die Erstversuchs-Wertung bleibt gespeichert. Fortschritt wird lokal im Browser gespeichert.';
+}
+
+/* Alles zurücksetzen (inkl. Speicher) */
+function resetAll(){
+  if(!confirm("Wirklich alles löschen (Antworten, Wertung, Simulation, Speicher)?")) return;
+  try{ localStorage.removeItem(STORE_KEY); }catch(e){}
+  location.reload();
+}
+
+/* ==================== Simulation (SVG) ==================== */
+let simEls = null;
+
+function simInit(){
+  simEls = {
+    dist: document.getElementById('simDist'),
+    rodGroup: document.getElementById('rodGroup'),
+    rod: document.getElementById('rod'),
+    rodDots: document.getElementById('rodDots'),
+    leafL: document.getElementById('leafL'),
+    leafR: document.getElementById('leafR'),
+    readout: document.getElementById('simReadout'),
+    scopeDots: document.getElementById('scopeDots')
+  };
+  // set slider
+  simEls.dist.value = String(simState.distance);
+  simUpdate();
+}
+
+function clamp(x,a,b){ return Math.max(a, Math.min(b,x)); }
+
+/* Qualitatives Modell:
+   induction ~ 1/(d^2 + k) (normiert)
+   angle ~ 0..35° abhängig von induction + |netCharge|
+*/
+function simCompute(){
+  const d = Number(simState.distance); // 40..240
+  const base = 1 / (d*d + 3500);      // klein
+  const induction = base * 70000;     // skaliert auf ~0..1
+  const indN = clamp(induction, 0, 1.15);
+
+  // NetCharge skaliert (0..1.2 typ.)
+  const netN = clamp(Math.abs(simState.netCharge), 0, 1.2);
+
+  // Angle mapping (mehr Gewicht auf Netto, damit Kontakt sichtbar bleibt)
+  const eff = clamp(0.9*indN + 0.75*netN, 0, 1.25);
+  const angle = 2 + 33*eff; // 2..~43
+
+  return { indN, netN, angle };
+}
+
+function simUpdate(){
+  if(!simEls) return;
+
+  const { indN, netN, angle } = simCompute();
+
+  // Stabposition: näher an Kugel (Kugel bei x~380, Stabbreite 30)
+  // Wir bewegen den Stab so, dass sein rechter Rand bei (380 - distance)
+  const targetRight = 380 - Number(simState.distance);
+  const rodX = clamp(targetRight - 30, 10, 300);
+  simEls.rod.setAttribute('x', String(rodX));
+  // dots relativ zum Stab
+  const dots = simEls.rodDots.querySelectorAll('circle');
+  dots.forEach(c => c.setAttribute('cx', String(rodX + 15)));
+
+  // Optik: Vorzeichen → Dot-Opazität leicht variieren
+  simEls.rodDots.setAttribute('opacity', simState.rodSign > 0 ? "0.22" : "0.32");
+
+  // Blättchen rotieren um (380,150)
+  const pivotX = 380, pivotY = 150;
+  const a = clamp(angle, 0, 45);
+
+  simEls.leafL.setAttribute('transform', `rotate(${-a} ${pivotX} ${pivotY})`);
+  simEls.leafR.setAttribute('transform', `rotate(${a} ${pivotX} ${pivotY})`);
+
+  // ScopeDots leicht stärker bei Netto-Ladung
+  const dotOp = 0.16 + 0.12*clamp(netN,0,1);
+  simEls.scopeDots.setAttribute('opacity', String(dotOp));
+
+  // Readout (kurz, ohne Physik-Fallen)
+  const signTxt = simState.rodSign > 0 ? "positiv" : "negativ";
+  const contactTxt = (Math.abs(simState.netCharge) > 0.02) ? "Netto-Ladung am Elektroskop vorhanden (Kontakt)."
+                                                           : "Keine Netto-Ladung gespeichert (nur Influenz).";
+  simEls.readout.textContent =
+    `Stab: ${signTxt} | Abstand: ${simState.distance} | Spreizung: ${Math.round(a)}° | ${contactTxt}`;
+
+  scheduleSave();
+}
+
+function simSetSign(s){
+  simState.rodSign = (s >= 0) ? +1 : -1;
+  simUpdate();
+}
+
+function simSetDistance(v){
+  simState.distance = Number(v);
+  simUpdate();
+}
+
+/* „Berühren“: Netto-Ladung wird übernommen (qualitativ: abhängig von Influenzstärke) */
+function simTouch(){
+  const { indN } = simCompute();
+  // mehr Einfluss bei geringerem Abstand
+  const gain = clamp(0.25 + 0.95*indN, 0.25, 1.25);
+  // Netto-Ladung addieren (nicht überschreiben), damit wiederholtes Berühren Wirkung hat
+  simState.netCharge = clamp(simState.netCharge + simState.rodSign*gain*0.55, -1.4, 1.4);
+  simUpdate();
+}
+
+function simGround(){
+  simState.netCharge = 0;
+  simUpdate();
+}
+
+function simReset(){
+  simState.rodSign = +1;
+  simState.distance = 160;
+  simState.netCharge = 0;
+  if(simEls && simEls.dist) simEls.dist.value = "160";
+  simUpdate();
+}
+
+/* ==================== Bootstrapping ==================== */
+document.addEventListener('DOMContentLoaded', ()=>{
+  // 1) Seed sichern
+  ensureSeed();
+
+  // 2) Antwortoptionen deterministisch mischen
+  shuffleMCBlocks();
+
+  // 3) State laden (nach Shuffle!)
+  const st = loadState();
+  if(st){
+    // Seed bleibt
+    if(st.attempted) Object.assign(attempted, st.attempted);
+    if(st.firstCorrect) Object.assign(firstCorrect, st.firstCorrect);
+    if(st.wrongStreak) Object.assign(wrongStreak, st.wrongStreak);
+    if(st.solutionUnlocked) Object.assign(solutionUnlocked, st.solutionUnlocked);
+    if(st.feedbackCache) Object.assign(feedbackCache, st.feedbackCache);
+
+    if(st.sim){
+      simState.rodSign = (st.sim.rodSign >= 0) ? +1 : -1;
+      simState.distance = Number(st.sim.distance ?? 160);
+      simState.netCharge = Number(st.sim.netCharge ?? 0);
+    }
+
+    applyInputs(st.inputs);
+    applySelects(st.selects);
+    applyFeedback();
+  }
+
+  // 4) Simulation starten
+  simInit();
+
+  // 5) Auto-Save
+  attachAutoSave();
+
+  // 6) Direkt speichern (stellt sicher, dass seed drin ist)
+  saveState();
+});
+</script>
+
+<script>
+/* ========= Schneeflocken-Animation (sanft) ========= */
+(function(){
+  const canvas = document.getElementById('snow');
+  const ctx = canvas.getContext('2d');
+
+  let w = 0, h = 0, dpr = 1;
+  let flakes = [];
+  const FLAKE_COUNT = 70;
+  const BASE_SPEED = 0.55;
+  const WIND = 0.15;
+
+  function resize(){
+    dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    w = Math.floor(window.innerWidth);
+    h = Math.floor(window.innerHeight);
+    canvas.width  = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+
+  function rand(min,max){ return min + Math.random()*(max-min); }
+
+  function makeFlake(){
+    return {
+      x: rand(0, w),
+      y: rand(-h, 0),
+      r: rand(1.1, 2.8),
+      vy: rand(BASE_SPEED*0.7, BASE_SPEED*1.6),
+      vx: rand(-WIND, WIND),
+      phase: rand(0, Math.PI*2),
+      wobble: rand(0.4, 1.2),
+      alpha: rand(0.18, 0.38)
+    };
+  }
+
+  function init(){
+    flakes = [];
+    for(let i=0;i<FLAKE_COUNT;i++) flakes.push(makeFlake());
+  }
+
+  function step(){
+    ctx.clearRect(0,0,w,h);
+
+    for(const f of flakes){
+      f.phase += 0.01 * f.wobble;
+      f.x += f.vx + Math.sin(f.phase)*0.35;
+      f.y += f.vy;
+
+      if(f.y > h + 10){
+        f.y = rand(-30, -5);
+        f.x = rand(0, w);
+      }
+      if(f.x < -20) f.x = w + 20;
+      if(f.x > w + 20) f.x = -20;
+
+      ctx.globalAlpha = f.alpha;
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI*2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+    }
+
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(step);
+  }
+
+  window.addEventListener('resize', () => { resize(); init(); });
+
+  resize();
+  init();
+  step();
+})();
+</script>
+
+</body>
+</html>
