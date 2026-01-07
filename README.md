@@ -1,2 +1,2 @@
 # elektrisches-Feld
-alles Links zum Thema elektrisches Feld Klasse 11
+alle Links zum Thema elektrisches Feld Klasse 11
