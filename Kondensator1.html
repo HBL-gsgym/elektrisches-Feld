@@ -1,0 +1,1327 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lernlandschaft Kondensator – Verständnis & Rechnen (interaktiv)</title>
+
+<!-- MathJax für saubere Rechnungen -->
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code','select','option'] }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+<style>
+  html, body { height: 100%; }
+  body{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size:12pt;
+    line-height:1.35;
+    margin:2.2cm;
+    background: #f7f7f7;
+    position: relative;
+  }
+
+  /* sanfter Hintergrund */
+  body::before{
+    content:"";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 18% 18%, rgba(0,0,0,0.08), transparent 33%),
+      radial-gradient(circle at 78% 28%, rgba(0,0,0,0.06), transparent 38%),
+      radial-gradient(circle at 30% 78%, rgba(0,0,0,0.05), transparent 45%),
+      radial-gradient(circle at 65% 70%, rgba(0,0,0,0.035), transparent 50%),
+      repeating-radial-gradient(circle at 25% 35%,
+        rgba(0,0,0,0.018) 0px, rgba(0,0,0,0.018) 1px,
+        transparent 10px, transparent 24px),
+      repeating-radial-gradient(circle at 78% 55%,
+        rgba(0,0,0,0.014) 0px, rgba(0,0,0,0.014) 1px,
+        transparent 12px, transparent 28px),
+      linear-gradient(to bottom, rgba(0,0,0,0.03), transparent 35%);
+    background-attachment: fixed;
+  }
+
+  /* Schneeflocken */
+  #snow{
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .page{
+    position: relative;
+    z-index: 2;
+  }
+
+  .header{border-bottom:1px solid #000; padding-bottom:0.2cm; margin-bottom:0.9cm;}
+  .header table{width:100%; border-collapse:collapse;}
+  .header td{font-weight:bold;}
+  .left{text-align:left;}
+  .center{text-align:center;}
+
+  h1{font-size:14pt; margin:0 0 0.2cm;}
+  .small{font-size:11pt; margin:0 0 0.5cm;}
+  .muted{color:#333;}
+
+  .task{
+    margin:0 0 0.95cm;
+    border: 1px solid rgba(0,0,0,0.16);
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.88);
+  }
+
+  .task:nth-of-type(8n+1){ background: rgba(235, 246, 255, 0.88); }
+  .task:nth-of-type(8n+2){ background: rgba(237, 255, 245, 0.88); }
+  .task:nth-of-type(8n+3){ background: rgba(255, 244, 235, 0.88); }
+  .task:nth-of-type(8n+4){ background: rgba(246, 240, 255, 0.88); }
+  .task:nth-of-type(8n+5){ background: rgba(255, 252, 232, 0.88); }
+  .task:nth-of-type(8n+6){ background: rgba(240, 249, 255, 0.88); }
+  .task:nth-of-type(8n+7){ background: rgba(252, 240, 248, 0.88); }
+  .task:nth-of-type(8n+8){ background: rgba(241, 255, 236, 0.88); }
+
+  .nr{font-weight:bold; display:inline-block; width:2em;}
+  .prompt{margin:0.2cm 0 0.25cm; font-style:italic;}
+
+  .mc label{display:block; margin:6px 0;}
+  .mc input{margin-right:8px;}
+
+  .btns{display:flex; gap:10px; margin:0.25cm 0; flex-wrap:wrap;}
+  button{font-size:12pt; padding:6px 12px; border:1px solid #000; background:#fff; cursor:pointer;}
+  button:disabled{opacity:0.6; cursor:not-allowed;}
+
+  .feedback{margin-top:0.2cm; font-weight:bold;}
+  .ok{color:#0a7a2f;}
+  .bad{color:#b00020;}
+  .hint{font-size:11pt; font-weight:normal; color:#333;}
+
+  .solutionBtn{display:none; margin-top:0.15cm;}
+  .solution{display:none; border-top:1px solid #000; margin-top:0.25cm; padding-top:0.25cm;}
+  .solution h3{font-size:12pt; margin:0 0 0.15cm;}
+  .solution .small2{font-size:11pt;}
+  .solution .calc{margin:0.2cm 0; padding:0.15cm 0.2cm; border:1px solid #000; background:#fff;}
+
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 10px 14px;
+    margin-top: 8px;
+    align-items:center;
+  }
+  .term{font-weight:bold;}
+  select{
+    font-size:12pt;
+    padding:4px 6px;
+    border:1px solid rgba(0,0,0,0.4);
+    background:#fff;
+    width:100%;
+    max-width: 760px;
+  }
+  .cloze{
+    margin-top: 8px;
+    padding: 8px 10px;
+    border: 1px solid rgba(0,0,0,0.18);
+    background: rgba(255,255,255,0.94);
+  }
+  .cloze-line{margin: 8px 0;}
+  .blank{display:inline-block; min-width: 180px; vertical-align: middle;}
+
+  .subpart{
+    margin-top: 8px;
+    padding: 8px 10px;
+    border: 1px solid rgba(0,0,0,0.14);
+    background: rgba(255,255,255,0.70);
+  }
+  .subpart b{display:block; margin-bottom:6px;}
+
+  .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;}
+
+  .topRow{
+    display:flex;
+    gap:12px;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    margin-bottom: 0.2cm;
+  }
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .field label{font-size:11pt; font-weight:bold;}
+  .field input{
+    font-size:12pt;
+    padding:6px 8px;
+    border:1px solid rgba(0,0,0,0.35);
+    background:#fff;
+    min-width: 280px;
+    max-width: 520px;
+  }
+  .smallrow{font-size:11pt; color:#333; margin-top:-2px;}
+
+  .metaBox{
+    font-size:11pt;
+    padding:6px 10px;
+    border:1px solid rgba(0,0,0,0.18);
+    background: rgba(255,255,255,0.75);
+    max-width: 720px;
+  }
+  .metaBox b{font-weight:bold;}
+
+  @media print{
+    body::before{display:none;}
+    #snow{display:none !important;}
+    button{display:none;}
+    .solutionBtn{display:none !important;}
+    .field{display:none;}
+    .metaBox{display:none;}
+  }
+</style>
+</head>
+
+<body>
+<canvas id="snow" aria-hidden="true"></canvas>
+
+<div class="page">
+  <div class="header">
+    <table>
+      <tr>
+        <td class="left">HBL</td>
+        <td class="center">Physik GK 11</td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+
+  <h1>Kondensator – Verständnisfragen & Rechnen</h1>
+
+  <div class="topRow">
+    <div class="field">
+      <label for="studentName">Name (Pflicht)</label>
+      <input id="studentName" type="text" placeholder="Vorname Nachname" autocomplete="name">
+      <div class="smallrow">Am Ende: „Ergebnisse an HBL senden“ (benötigt Internet).</div>
+    </div>
+
+    <div class="btns" style="margin:0;">
+      <button onclick="toggleSnow()">Schnee an/aus</button>
+      <button onclick="showScore()">Ergebnis anzeigen</button>
+      <button id="sendBtn" onclick="sendResults()" disabled>Ergebnisse an HBL senden</button>
+      <button onclick="showInfo()">Info</button>
+    </div>
+  </div>
+
+  <div class="metaBox">
+    <b>Kurs:</b> <span id="metaCourse"></span> &nbsp;|&nbsp;
+    <b>Arbeitsblatt:</b> <span id="metaSheet"></span>
+  </div>
+
+  <p class="small" style="margin-top:0.45cm;">
+    <b>Regel:</b> Gezählt wird nur, ob eine Aufgabe <b>beim ersten Prüfen</b> richtig gelöst wurde.
+    Wenn du eine Aufgabe <b>3× hintereinander falsch</b> prüfst, erscheint <b>„Lösungsweg anzeigen“</b>.
+    <span class="muted">(Antwortreihenfolge ist pro Gerät gemischt. Fortschritt wird lokal gespeichert.)</span>
+  </p>
+
+  <div id="score" class="feedback" style="margin-top:-0.15cm;"></div>
+  <div id="info" class="hint" style="margin-top:0.2cm;"></div>
+
+  <!-- ===================== 1 ===================== -->
+  <section class="task" data-task="1">
+    <div><span class="nr">1.</span>
+      <b>Was beschreibt die Kapazität <span class="mono">C</span> eines Kondensators am treffendsten?</b>
+    </div>
+    <div class="prompt">Einfachauswahl (1 Antwort richtig)</div>
+    <div class="mc" data-shuffle="q1">
+      <label><input type="radio" name="q1" value="a"> Gespeicherte Energie pro Zeit</label>
+      <label><input type="radio" name="q1" value="b"> Gespeicherte Ladung pro angelegter Spannung</label>
+      <label><input type="radio" name="q1" value="c"> Feldstärke pro Plattenfläche</label>
+      <label><input type="radio" name="q1" value="d"> Widerstand gegen Stromfluss</label>
+      <label><input type="radio" name="q1" value="e"> Stromstärke pro Spannung</label>
+    </div>
+    <div class="btns">
+      <button onclick="checkSingle(1,'q1','b')">Prüfen</button>
+      <button onclick="resetUI(1)">Zurücksetzen</button>
+    </div>
+    <div id="f1" class="feedback"></div>
+    <button id="sb1" class="solutionBtn" onclick="toggleSolution(1)">Lösungsweg anzeigen</button>
+    <div id="sol1" class="solution">
+      <h3>Lösungsweg (Aufgabe 1)</h3>
+      <div class="small2">
+        Definition: \(\,C=\frac{Q}{U}\,\). Damit beschreibt \(C\), wie viel Ladung pro Volt gespeichert werden kann.
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 2 ===================== -->
+  <section class="task" data-task="2">
+    <div><span class="nr">2.</span>
+      <b>Ein geladener Plattenkondensator besitzt auf den Platten…</b>
+    </div>
+    <div class="prompt">Einfachauswahl (1 Antwort richtig)</div>
+    <div class="mc" data-shuffle="q2">
+      <label><input type="radio" name="q2" value="a"> \(\,+Q\) und \(\,+Q\)</label>
+      <label><input type="radio" name="q2" value="b"> \(\,-Q\) und \(\,-Q\)</label>
+      <label><input type="radio" name="q2" value="c"> \(\,+Q\) und \(\,-Q\) (Beträge gleich)</label>
+      <label><input type="radio" name="q2" value="d"> \(\,+Q\) und \(\,-2Q\)</label>
+      <label><input type="radio" name="q2" value="e"> \(\,+2Q\) und \(\,-Q\)</label>
+    </div>
+    <div class="btns">
+      <button onclick="checkSingle(2,'q2','c')">Prüfen</button>
+      <button onclick="resetUI(2)">Zurücksetzen</button>
+    </div>
+    <div id="f2" class="feedback"></div>
+    <button id="sb2" class="solutionBtn" onclick="toggleSolution(2)">Lösungsweg anzeigen</button>
+    <div id="sol2" class="solution">
+      <h3>Lösungsweg (Aufgabe 2)</h3>
+      <div class="small2">
+        Beim Laden werden Elektronen von einer Platte zur anderen verschoben: eine Platte hat Elektronenüberschuss (\(-Q\)), die andere Elektronenmangel (\(+Q\)). Die Beträge sind gleich groß.
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 3 ===================== -->
+  <section class="task" data-task="3">
+    <div><span class="nr">3.</span>
+      <b>Welche Aussage trifft (idealisiert, linearer Bereich) zu?</b>
+    </div>
+    <div class="prompt">Einfachauswahl (1 Antwort richtig)</div>
+    <div class="mc" data-shuffle="q3">
+      <label><input type="radio" name="q3" value="a"> \(\,Q\) ist proportional zu \(\,U\).</label>
+      <label><input type="radio" name="q3" value="b"> \(\,Q\) ist proportional zu \(\,1/U\).</label>
+      <label><input type="radio" name="q3" value="c"> \(\,Q\) ist unabhängig von \(\,U\).</label>
+      <label><input type="radio" name="q3" value="d"> \(\,Q\) ist proportional zu \(\,U^2\).</label>
+      <label><input type="radio" name="q3" value="e"> \(\,Q\) ist proportional zu \(\,d\).</label>
+    </div>
+    <div class="btns">
+      <button onclick="checkSingle(3,'q3','a')">Prüfen</button>
+      <button onclick="resetUI(3)">Zurücksetzen</button>
+    </div>
+    <div id="f3" class="feedback"></div>
+    <button id="sb3" class="solutionBtn" onclick="toggleSolution(3)">Lösungsweg anzeigen</button>
+    <div id="sol3" class="solution">
+      <h3>Lösungsweg (Aufgabe 3)</h3>
+      <div class="small2">
+        Für den Kondensator gilt \(\,Q=C\cdot U\). Bei konstantem \(C\) ist \(Q\) proportional zu \(U\).
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 4 ===================== -->
+  <section class="task" data-task="4">
+    <div><span class="nr">4.</span>
+      <b>Bei festem Plattenabstand <span class="mono">d</span> und fester Fläche <span class="mono">A</span>: Welche Größen bleiben konstant, wenn man <span class="mono">U</span> verändert?</b>
+    </div>
+    <div class="prompt">Mehrfachauswahl (2 Antworten richtig)</div>
+    <div class="mc" data-shuffle="q4">
+      <label><input type="checkbox" name="q4" value="a"> \(\,C\)</label>
+      <label><input type="checkbox" name="q4" value="b"> \(\,Q\)</label>
+      <label><input type="checkbox" name="q4" value="c"> \(\,Q/U\)</label>
+      <label><input type="checkbox" name="q4" value="d"> \(\,E\)</label>
+      <label><input type="checkbox" name="q4" value="e"> \(\,U/d\)</label>
+    </div>
+    <div class="btns">
+      <button onclick="checkMulti(4,'q4',['a','c'])">Prüfen</button>
+      <button onclick="resetUI(4)">Zurücksetzen</button>
+    </div>
+    <div id="f4" class="feedback"></div>
+    <button id="sb4" class="solutionBtn" onclick="toggleSolution(4)">Lösungsweg anzeigen</button>
+    <div id="sol4" class="solution">
+      <h3>Lösungsweg (Aufgabe 4)</h3>
+      <div class="small2">
+        Bei festem \(A\) und \(d\) ist \(C=\varepsilon_0\frac{A}{d}\) konstant. Außerdem ist \(Q/U=C\) konstant. Dagegen ändern sich \(Q\) und \(E=U/d\) mit \(U\).
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 5 ===================== -->
+  <section class="task" data-task="5">
+    <div><span class="nr">5.</span>
+      <b>Verdoppelt man die Plattenfläche <span class="mono">A</span> (bei konstantem <span class="mono">d</span>), dann…</b>
+    </div>
+    <div class="prompt">Einfachauswahl (1 Antwort richtig)</div>
+    <div class="mc" data-shuffle="q5">
+      <label><input type="radio" name="q5" value="a"> halbiert sich \(C\)</label>
+      <label><input type="radio" name="q5" value="b"> verdoppelt sich \(C\)</label>
+      <label><input type="radio" name="q5" value="c"> bleibt \(C\) gleich</label>
+      <label><input type="radio" name="q5" value="d"> wird \(C\) viermal so groß</label>
+      <label><input type="radio" name="q5" value="e"> wird \(C\) um den Faktor 10 größer</label>
+    </div>
+    <div class="btns">
+      <button onclick="checkSingle(5,'q5','b')">Prüfen</button>
+      <button onclick="resetUI(5)">Zurücksetzen</button>
+    </div>
+    <div id="f5" class="feedback"></div>
+    <button id="sb5" class="solutionBtn" onclick="toggleSolution(5)">Lösungsweg anzeigen</button>
+    <div id="sol5" class="solution">
+      <h3>Lösungsweg (Aufgabe 5)</h3>
+      <div class="small2">
+        \(C=\varepsilon_0\frac{A}{d}\) ⇒ \(C\) ist proportional zu \(A\). Verdoppelt man \(A\), verdoppelt sich \(C\).
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 6 ===================== -->
+  <section class="task" data-task="6">
+    <div><span class="nr">6.</span>
+      <b>Verdoppelt man den Plattenabstand <span class="mono">d</span> (bei konstantem <span class="mono">A</span>), dann…</b>
+    </div>
+    <div class="prompt">Einfachauswahl (1 Antwort richtig)</div>
+    <div class="mc" data-shuffle="q6">
+      <label><input type="radio" name="q6" value="a"> verdoppelt sich \(C\)</label>
+      <label><input type="radio" name="q6" value="b"> bleibt \(C\) gleich</label>
+      <label><input type="radio" name="q6" value="c"> halbiert sich \(C\)</label>
+      <label><input type="radio" name="q6" value="d"> wird \(C\) viermal so groß</label>
+      <label><input type="radio" name="q6" value="e"> wird \(C\) um den Faktor 10 kleiner</label>
+    </div>
+    <div class="btns">
+      <button onclick="checkSingle(6,'q6','c')">Prüfen</button>
+      <button onclick="resetUI(6)">Zurücksetzen</button>
+    </div>
+    <div id="f6" class="feedback"></div>
+    <button id="sb6" class="solutionBtn" onclick="toggleSolution(6)">Lösungsweg anzeigen</button>
+    <div id="sol6" class="solution">
+      <h3>Lösungsweg (Aufgabe 6)</h3>
+      <div class="small2">
+        \(C=\varepsilon_0\frac{A}{d}\) ⇒ \(C\) ist umgekehrt proportional zu \(d\). Verdoppelt man \(d\), halbiert sich \(C\).
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 7 ===================== -->
+  <section class="task" data-task="7">
+    <div><span class="nr">7.</span>
+      <b>Welche Beziehung passt zu einem homogenen Feld zwischen parallelen Platten?</b>
+    </div>
+    <div class="prompt">Einfachauswahl (1 Antwort richtig)</div>
+    <div class="mc" data-shuffle="q7">
+      <label><input type="radio" name="q7" value="a"> \(E=U\cdot d\)</label>
+      <label><input type="radio" name="q7" value="b"> \(E=\frac{U}{d}\)</label>
+      <label><input type="radio" name="q7" value="c"> \(E=Q\cdot d\)</label>
+      <label><input type="radio" name="q7" value="d"> \(E=\frac{C}{U}\)</label>
+      <label><input type="radio" name="q7" value="e"> \(E=\varepsilon_0\frac{A}{d}\)</label>
+    </div>
+    <div class="btns">
+      <button onclick="checkSingle(7,'q7','b')">Prüfen</button>
+      <button onclick="resetUI(7)">Zurücksetzen</button>
+    </div>
+    <div id="f7" class="feedback"></div>
+    <button id="sb7" class="solutionBtn" onclick="toggleSolution(7)">Lösungsweg anzeigen</button>
+    <div id="sol7" class="solution">
+      <h3>Lösungsweg (Aufgabe 7)</h3>
+      <div class="small2">
+        Im homogenen Feld gilt \(E=\frac{U}{d}\) (Spannung pro Abstand).
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 8 Zuordnung ===================== -->
+  <section class="task" data-task="8">
+    <div><span class="nr">8.</span>
+      <b>Ordne die Größen richtig zu.</b>
+    </div>
+    <div class="prompt">Zuordnung (3 Zuordnungen richtig)</div>
+
+    <div class="grid">
+      <div class="term">\(C\)</div>
+      <div>
+        <select name="m8_1">
+          <option value="">– bitte auswählen –</option>
+          <option value="1">elektrische Feldkonstante (Naturkonstante)</option>
+          <option value="2">Feldstärke im Kondensator</option>
+          <option value="3">Kapazität (Maß für gespeicherte Ladung pro Spannung)</option>
+          <option value="4">Stromstärke</option>
+          <option value="5">Spannung</option>
+        </select>
+      </div>
+
+      <div class="term">\(\varepsilon_0\)</div>
+      <div>
+        <select name="m8_2">
+          <option value="">– bitte auswählen –</option>
+          <option value="1">elektrische Feldkonstante (Naturkonstante)</option>
+          <option value="2">Feldstärke im Kondensator</option>
+          <option value="3">Kapazität (Maß für gespeicherte Ladung pro Spannung)</option>
+          <option value="4">Stromstärke</option>
+          <option value="5">Spannung</option>
+        </select>
+      </div>
+
+      <div class="term">\(E\)</div>
+      <div>
+        <select name="m8_3">
+          <option value="">– bitte auswählen –</option>
+          <option value="1">elektrische Feldkonstante (Naturkonstante)</option>
+          <option value="2">Feldstärke im Kondensator</option>
+          <option value="3">Kapazität (Maß für gespeicherte Ladung pro Spannung)</option>
+          <option value="4">Stromstärke</option>
+          <option value="5">Spannung</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkMatch(8, {m1:'3', m2:'1', m3:'2'}, ['m8_1','m8_2','m8_3'])">Prüfen</button>
+      <button onclick="resetUI(8)">Zurücksetzen</button>
+    </div>
+
+    <div id="f8" class="feedback"></div>
+    <button id="sb8" class="solutionBtn" onclick="toggleSolution(8)">Lösungsweg anzeigen</button>
+    <div id="sol8" class="solution">
+      <h3>Lösungsweg (Aufgabe 8)</h3>
+      <div class="small2">
+        \(C\) → Kapazität (gespeicherte Ladung pro Spannung).<br>
+        \(\varepsilon_0\) → elektrische Feldkonstante.<br>
+        \(E\) → Feldstärke.
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 9 Lückentext ===================== -->
+  <section class="task" data-task="9">
+    <div><span class="nr">9.</span>
+      <b>Vervollständige den Lückentext.</b>
+    </div>
+    <div class="prompt">Lückentext (4 Lücken richtig)</div>
+
+    <div class="cloze">
+      <div class="cloze-line">
+        „Die gespeicherte Ladung \(Q\) ist proportional zur angelegten Spannung \(U\). Der Quotient \(Q/U\) heißt
+        <span class="blank">
+          <select name="c9_1">
+            <option value="">– auswählen –</option>
+            <option value="Kapazität">Kapazität</option>
+            <option value="Feldstärke">Feldstärke</option>
+            <option value="Widerstand">Widerstand</option>
+            <option value="Leitfähigkeit">Leitfähigkeit</option>
+          </select>
+        </span>.
+      </div>
+
+      <!-- FIX: Formel wird in zwei MathJax-Teile getrennt, Dropdown sitzt "zwischen" den Teilen -->
+      <div class="cloze-line">
+        Für einen ungefüllten Plattenkondensator gilt näherungsweise
+        <span class="mono">\(C=\)</span>
+        <span class="blank">
+          <select name="c9_2">
+            <option value="">– auswählen –</option>
+            <option value="ε0">ε₀</option>
+            <option value="ε0·d/A">ε₀·d/A</option>
+            <option value="U/d">U/d</option>
+            <option value="Q/U">Q/U</option>
+          </select>
+        </span>
+        <span class="mono">\(\cdot \frac{A}{d}\)</span>.
+      </div>
+
+      <div class="cloze-line">
+        Die Feldstärke im Kondensator hängt von
+        <span class="blank">
+          <select name="c9_3">
+            <option value="">– auswählen –</option>
+            <option value="U">U</option>
+            <option value="Q">Q</option>
+            <option value="C">C</option>
+            <option value="ε0">ε₀</option>
+          </select>
+        </span>
+        und dem Plattenabstand ab: \(E=
+        <span class="blank">
+          <select name="c9_4">
+            <option value="">– auswählen –</option>
+            <option value="U/d">U/d</option>
+            <option value="d/U">d/U</option>
+            <option value="Q·U">Q·U</option>
+            <option value="ε0·A/d">ε₀·A/d</option>
+          </select>
+        </span>\).
+      </div>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkCloze(9, {k1:'Kapazität', k2:'ε0', k3:'U', k4:'U/d'}, ['c9_1','c9_2','c9_3','c9_4'])">Prüfen</button>
+      <button onclick="resetUI(9)">Zurücksetzen</button>
+    </div>
+
+    <div id="f9" class="feedback"></div>
+    <button id="sb9" class="solutionBtn" onclick="toggleSolution(9)">Lösungsweg anzeigen</button>
+    <div id="sol9" class="solution">
+      <h3>Lösungsweg (Aufgabe 9)</h3>
+      <div class="small2">
+        \(C=\frac{Q}{U}\), \(C=\varepsilon_0\frac{A}{d}\), \(E=\frac{U}{d}\).
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 10 Rechnen R1 ===================== -->
+  <section class="task" data-task="10">
+    <div><span class="nr">10.</span>
+      <b>R1: Ungefüllter Plattenkondensator mit kreisförmigen Platten: \(r=10\,\mathrm{cm}\), \(d=2{,}0\,\mathrm{mm}\). Bei \(U=15\,\mathrm{kV}\).</b>
+    </div>
+    <div class="prompt">Zwei Teilfragen (beide richtig für „richtig“)</div>
+
+    <div class="subpart">
+      <b>a) Kapazität \(C\)</b>
+      <div class="mc" data-shuffle="r1c">
+        <label><input type="radio" name="r1c" value="a"> \(C=1{,}39\cdot10^{-10}\,\mathrm{F}\)</label>
+        <label><input type="radio" name="r1c" value="b"> \(C=1{,}39\cdot10^{-13}\,\mathrm{F}\)</label>
+        <label><input type="radio" name="r1c" value="c"> \(C=1{,}39\cdot10^{-8}\,\mathrm{F}\)</label>
+        <label><input type="radio" name="r1c" value="d"> \(C=4{,}44\cdot10^{-10}\,\mathrm{F}\)</label>
+        <label><input type="radio" name="r1c" value="e"> \(C=2{,}78\cdot10^{-10}\,\mathrm{F}\)</label>
+      </div>
+    </div>
+
+    <div class="subpart">
+      <b>b) Gespeicherte Ladung \(Q\) bei \(U=15\,\mathrm{kV}\)</b>
+      <div class="mc" data-shuffle="r1q">
+        <label><input type="radio" name="r1q" value="a"> \(Q=2{,}09\cdot10^{-6}\,\mathrm{C}\)</label>
+        <label><input type="radio" name="r1q" value="b"> \(Q=2{,}09\cdot10^{-9}\,\mathrm{C}\)</label>
+        <label><input type="radio" name="r1q" value="c"> \(Q=2{,}09\cdot10^{-3}\,\mathrm{C}\)</label>
+        <label><input type="radio" name="r1q" value="d"> \(Q=9{,}27\cdot10^{-7}\,\mathrm{C}\)</label>
+        <label><input type="radio" name="r1q" value="e"> \(Q=1{,}04\cdot10^{-7}\,\mathrm{C}\)</label>
+      </div>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkTwoSingles(10, 'r1c','a', 'r1q','a')">Prüfen</button>
+      <button onclick="resetUI(10)">Zurücksetzen</button>
+    </div>
+
+    <div id="f10" class="feedback"></div>
+    <button id="sb10" class="solutionBtn" onclick="toggleSolution(10)">Lösungsweg anzeigen</button>
+
+    <div id="sol10" class="solution">
+      <h3>Lösungsweg (Aufgabe 10)</h3>
+      <div class="small2">
+        <div><b>Gegeben:</b> \(r=10\,\mathrm{cm}=0{,}10\,\mathrm{m}\), \(d=2{,}0\,\mathrm{mm}=2{,}0\cdot10^{-3}\,\mathrm{m}\), \(U=15\,\mathrm{kV}=1{,}5\cdot10^{4}\,\mathrm{V}\), \(\varepsilon_0=8{,}854\cdot10^{-12}\,\mathrm{\frac{C}{V\cdot m}}\)</div>
+        <div class="calc">
+          \[
+          A=\pi r^2=\pi\cdot(0{,}10)^2=\pi\cdot 0{,}01=3{,}1416\cdot10^{-2}\,\mathrm{m^2}
+          \]
+        </div>
+        <div class="calc">
+          \[
+          C=\varepsilon_0\frac{A}{d}
+          =8{,}854\cdot10^{-12}\cdot\frac{3{,}1416\cdot10^{-2}}{2{,}0\cdot10^{-3}}
+          \approx 1{,}39\cdot10^{-10}\,\mathrm{F}
+          \]
+        </div>
+        <div class="calc">
+          \[
+          Q=C\cdot U
+          =1{,}39\cdot10^{-10}\cdot 1{,}5\cdot10^{4}
+          \approx 2{,}09\cdot10^{-6}\,\mathrm{C}
+          \]
+        </div>
+        <div><b>Ergebnis:</b> \(C\approx1{,}39\cdot10^{-10}\,\mathrm{F}\), \(Q\approx2{,}09\cdot10^{-6}\,\mathrm{C}\)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 11 Rechnen R2 ===================== -->
+  <section class="task" data-task="11">
+    <div><span class="nr">11.</span>
+      <b>R2: Quadratische Platten: \(a=25\,\mathrm{cm}\), \(d=4{,}0\,\mathrm{mm}\), \(U=750\,\mathrm{V}\). Berechne die gespeicherte Ladung \(Q\).</b>
+    </div>
+    <div class="prompt">Einfachauswahl (1 Antwort richtig)</div>
+
+    <div class="mc" data-shuffle="r2">
+      <label><input type="radio" name="r2" value="a"> \(Q=1{,}04\cdot10^{-7}\,\mathrm{C}\)</label>
+      <label><input type="radio" name="r2" value="b"> \(Q=1{,}04\cdot10^{-10}\,\mathrm{C}\)</label>
+      <label><input type="radio" name="r2" value="c"> \(Q=1{,}04\cdot10^{-4}\,\mathrm{C}\)</label>
+      <label><input type="radio" name="r2" value="d"> \(Q=6{,}92\cdot10^{-8}\,\mathrm{C}\)</label>
+      <label><input type="radio" name="r2" value="e"> \(Q=7{,}50\cdot10^{-7}\,\mathrm{C}\)</label>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkSingle(11,'r2','a')">Prüfen</button>
+      <button onclick="resetUI(11)">Zurücksetzen</button>
+    </div>
+
+    <div id="f11" class="feedback"></div>
+    <button id="sb11" class="solutionBtn" onclick="toggleSolution(11)">Lösungsweg anzeigen</button>
+
+    <div id="sol11" class="solution">
+      <h3>Lösungsweg (Aufgabe 11)</h3>
+      <div class="small2">
+        <div><b>Gegeben:</b> \(a=25\,\mathrm{cm}=0{,}25\,\mathrm{m}\), \(d=4{,}0\,\mathrm{mm}=4{,}0\cdot10^{-3}\,\mathrm{m}\), \(U=750\,\mathrm{V}\)</div>
+        <div class="calc">
+          \[
+          A=a^2=(0{,}25)^2=0{,}0625\,\mathrm{m^2}
+          \]
+        </div>
+        <div class="calc">
+          \[
+          C=\varepsilon_0\frac{A}{d}
+          =8{,}854\cdot10^{-12}\cdot\frac{0{,}0625}{4{,}0\cdot10^{-3}}
+          \approx 1{,}38\cdot10^{-10}\,\mathrm{F}
+          \]
+        </div>
+        <div class="calc">
+          \[
+          Q=C\cdot U
+          =1{,}38\cdot10^{-10}\cdot 750
+          \approx 1{,}04\cdot10^{-7}\,\mathrm{C}
+          \]
+        </div>
+        <div><b>Ergebnis:</b> \(Q\approx1{,}04\cdot10^{-7}\,\mathrm{C}\)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 12 Rechnen R3 ===================== -->
+  <section class="task" data-task="12">
+    <div><span class="nr">12.</span>
+      <b>R3: Kreisplatten: \(r=8{,}0\,\mathrm{cm}\), \(d=0{,}80\,\mathrm{mm}\). Gespeicherte Ladung: \(Q=3{,}0\,\mathrm{nC}\). Berechne die nötige Spannung \(U\).</b>
+    </div>
+    <div class="prompt">Einfachauswahl (1 Antwort richtig)</div>
+
+    <div class="mc" data-shuffle="r3">
+      <label><input type="radio" name="r3" value="a"> \(U=13{,}5\,\mathrm{V}\)</label>
+      <label><input type="radio" name="r3" value="b"> \(U=135\,\mathrm{V}\)</label>
+      <label><input type="radio" name="r3" value="c"> \(U=1{,}35\,\mathrm{V}\)</label>
+      <label><input type="radio" name="r3" value="d"> \(U=13{,}5\,\mathrm{kV}\)</label>
+      <label><input type="radio" name="r3" value="e"> \(U=0{,}0135\,\mathrm{V}\)</label>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkSingle(12,'r3','a')">Prüfen</button>
+      <button onclick="resetUI(12)">Zurücksetzen</button>
+    </div>
+
+    <div id="f12" class="feedback"></div>
+    <button id="sb12" class="solutionBtn" onclick="toggleSolution(12)">Lösungsweg anzeigen</button>
+
+    <div id="sol12" class="solution">
+      <h3>Lösungsweg (Aufgabe 12)</h3>
+      <div class="small2">
+        <div><b>Gegeben:</b> \(r=8{,}0\,\mathrm{cm}=0{,}080\,\mathrm{m}\), \(d=0{,}80\,\mathrm{mm}=8{,}0\cdot10^{-4}\,\mathrm{m}\), \(Q=3{,}0\,\mathrm{nC}=3{,}0\cdot10^{-9}\,\mathrm{C}\)</div>
+        <div class="calc">
+          \[
+          A=\pi r^2=\pi\cdot(0{,}080)^2=\pi\cdot 0{,}0064\approx 2{,}0106\cdot10^{-2}\,\mathrm{m^2}
+          \]
+        </div>
+        <div class="calc">
+          \[
+          C=\varepsilon_0\frac{A}{d}
+          =8{,}854\cdot10^{-12}\cdot\frac{2{,}0106\cdot10^{-2}}{8{,}0\cdot10^{-4}}
+          \approx 2{,}23\cdot10^{-10}\,\mathrm{F}
+          \]
+        </div>
+        <div class="calc">
+          \[
+          U=\frac{Q}{C}
+          =\frac{3{,}0\cdot10^{-9}}{2{,}23\cdot10^{-10}}
+          \approx 1{,}35\cdot10^{1}\,\mathrm{V}
+          \approx 13{,}5\,\mathrm{V}
+          \]
+        </div>
+        <div><b>Ergebnis:</b> \(U\approx 13{,}5\,\mathrm{V}\)</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ==================== KONFIG (fest verankert) ==================== */
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwNSC_7Jbv7j-NZpVHpWH41R-E97eVqg6BYLHI5N-Cn9cb7iGWHmiXiJk3RciO2gbM8XQ/exec";
+const SHEET_ID = "Kondensator_Lernlandschaft_01";
+const COURSE_NAME = "GK 11 Ph 2025";
+const STORE_KEY = "hbl_kondensator_webhook_detail_fixedmeta_v2";
+
+/* ==================== STATE ==================== */
+const attempted = {};
+const firstCorrect = {};
+const wrongStreak = {};
+const solutionUnlocked = {};
+const feedbackCache = {};
+let seed = null;
+
+let snowEnabled = true;
+let studentName = "";
+
+/* Zeitdaten */
+let startedAtISO = null;
+let lastSent = null;
+
+/* ==================== SAVE/LOAD ==================== */
+function saveState(){
+  const data = {
+    seed, snowEnabled, studentName, startedAtISO, lastSent,
+    attempted, firstCorrect, wrongStreak, solutionUnlocked, feedbackCache,
+    inputs: snapshotInputs(),
+    selects: snapshotSelects()
+  };
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(data)); }catch(e){}
+}
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return null;
+    return JSON.parse(raw);
+  }catch(e){ return null; }
+}
+let saveTimer = null;
+function scheduleSave(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveState, 120);
+}
+function snapshotInputs(){
+  const result = {};
+  const names = new Set([...document.querySelectorAll('input[name]')].map(i=>i.name));
+  for(const n of names){
+    const checked = [...document.querySelectorAll('input[name="'+n+'"]:checked')].map(x=>x.value).sort();
+    result[n] = checked;
+  }
+  return result;
+}
+function snapshotSelects(){
+  const result = {};
+  document.querySelectorAll('select[name]').forEach(s => result[s.name] = s.value);
+  return result;
+}
+function applyInputs(saved){
+  if(!saved) return;
+  for(const [name, arr] of Object.entries(saved)){
+    const set = new Set(arr || []);
+    document.querySelectorAll('input[name="'+name+'"]').forEach(inp => {
+      inp.checked = set.has(inp.value);
+    });
+  }
+}
+function applySelects(saved){
+  if(!saved) return;
+  for(const [name, val] of Object.entries(saved)){
+    const sel = document.querySelector('select[name="'+name+'"]');
+    if(sel) sel.value = val;
+  }
+}
+function applyFeedback(){
+  for(const [k,v] of Object.entries(feedbackCache)){
+    const n = Number(k);
+    const el = document.getElementById('f'+n);
+    if(el && v && typeof v.text === "string"){
+      el.textContent = v.text;
+      el.className = 'feedback ' + (v.okClass || '');
+    }
+  }
+  for(const [k,unlocked] of Object.entries(solutionUnlocked)){
+    const n = Number(k);
+    if(unlocked){
+      const b = document.getElementById('sb'+n);
+      if(b) b.style.display = 'inline-block';
+    }
+  }
+}
+function attachAutoSave(){
+  document.querySelectorAll('input, select').forEach(el=>{
+    el.addEventListener('change', scheduleSave);
+    el.addEventListener('input', scheduleSave);
+  });
+}
+
+/* ==================== SHUFFLE ==================== */
+function mulberry32(a){
+  return function(){
+    let t = a += 0x6D2B79F5;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  }
+}
+function ensureSeed(){
+  const st = loadState();
+  if(st && typeof st.seed === "number"){
+    seed = st.seed;
+    return;
+  }
+  seed = Math.floor(Math.random()*1e9);
+  saveState();
+}
+function shuffleArray(arr, rnd){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(rnd()*(i+1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+function shuffleMCBlocks(){
+  const blocks = document.querySelectorAll('.mc[data-shuffle]');
+  blocks.forEach((block, idx)=>{
+    const rnd = mulberry32((seed + 1013*(idx+1)) >>> 0);
+    const labels = [...block.querySelectorAll('label')];
+    shuffleArray(labels, rnd);
+    labels.forEach(l => block.appendChild(l));
+  });
+}
+
+/* ==================== UI (Name) ==================== */
+function updateSendBtn(){
+  const btn = document.getElementById('sendBtn');
+  studentName = (document.getElementById('studentName').value || "").trim();
+  btn.disabled = (studentName.length === 0);
+  scheduleSave();
+}
+
+/* ==================== SCORE / DETAILS ==================== */
+function computeDetail(){
+  const total = 12;
+  let correctFirst = 0;
+  let attemptedCount = 0;
+  const firstCorrectTasks = [];
+  const firstWrongTasks = [];
+
+  for(let i=1;i<=total;i++){
+    if(attempted[i]){
+      attemptedCount++;
+      if(firstCorrect[i]){
+        correctFirst++;
+        firstCorrectTasks.push(i);
+      }else{
+        firstWrongTasks.push(i);
+      }
+    }
+  }
+  return {
+    total, correctFirst, attemptedCount,
+    scoreStr: correctFirst + "/" + total,
+    firstCorrectTasks, firstWrongTasks
+  };
+}
+
+/* ==================== SEND (ohne page) ==================== */
+function showSentOk(detail){
+  lastSent = { name: studentName, course: COURSE_NAME, sheetId: SHEET_ID, score: detail.scoreStr, ts: new Date().toISOString() };
+  const s = document.getElementById('score');
+  s.className = 'feedback ok';
+  s.textContent =
+    "Gesendet ✅  (" + studentName +
+    " | " + COURSE_NAME +
+    " | " + SHEET_ID +
+    " | " + detail.scoreStr +
+    " | Erstversuch richtig: [" + detail.firstCorrectTasks.join(",") + "]" +
+    " | Erstversuch falsch: [" + detail.firstWrongTasks.join(",") + "]" +
+    ")";
+  scheduleSave();
+}
+function showSentFail(msg){
+  const s = document.getElementById('score');
+  s.className = 'feedback bad';
+  s.textContent = "Senden fehlgeschlagen ❌ (" + msg + ")";
+  scheduleSave();
+}
+
+async function sendResults(){
+  if(!WEBAPP_URL){
+    showSentFail("WEBAPP_URL ist leer.");
+    return;
+  }
+
+  const name = (document.getElementById('studentName').value || "").trim();
+  if(!name){
+    const s = document.getElementById('score');
+    s.className = 'feedback bad';
+    s.textContent = 'Bitte zuerst den Namen eintragen.';
+    return;
+  }
+
+  const detail = computeDetail();
+
+  const sentAtISO = new Date().toISOString();
+  const startedAt = startedAtISO ? new Date(startedAtISO) : new Date();
+  const sentAt = new Date(sentAtISO);
+  const workTimeSec = Math.max(0, Math.round((sentAt.getTime() - startedAt.getTime()) / 1000));
+
+  const payload = {
+    name: name,
+    classCode: COURSE_NAME,
+    sheetId: SHEET_ID,
+
+    score: detail.scoreStr,
+    attemptedCount: detail.attemptedCount,
+    firstCorrectTasks: detail.firstCorrectTasks.join(","),
+    firstWrongTasks: detail.firstWrongTasks.join(","),
+
+    startedAt: startedAtISO,
+    sentAt: sentAtISO,
+    workTimeSec: workTimeSec,
+
+    ua: navigator.userAgent
+    // page: entfernt
+  };
+
+  const btn = document.getElementById('sendBtn');
+  btn.disabled = true;
+
+  try{
+    await fetch(WEBAPP_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    showSentOk(detail);
+  }catch(e){
+    showSentFail(String(e));
+  }finally{
+    setTimeout(() => { updateSendBtn(); }, 700);
+  }
+}
+
+/* ==================== CHECK-LOGIK ==================== */
+function ensureInit(n){
+  if(!(n in wrongStreak)) wrongStreak[n] = 0;
+  if(!(n in solutionUnlocked)) solutionUnlocked[n] = false;
+}
+function cacheFeedback(n, ok, msg){
+  feedbackCache[n] = { text: msg, okClass: ok ? 'ok' : 'bad' };
+}
+function setNeedAnswer(n){
+  const el=document.getElementById('f'+n);
+  el.className='feedback bad';
+  el.textContent='Bitte wähle zuerst eine Antwort aus.';
+  cacheFeedback(n, false, el.textContent);
+  scheduleSave();
+}
+function setFeedback(n, ok, isFirst, msg){
+  const el = document.getElementById('f'+n);
+  el.className = 'feedback ' + (ok ? 'ok' : 'bad');
+  let text = msg ?? (ok ? 'Richtig ✅' : 'Falsch ❌');
+  if(!isFirst) text += '  (Wertung bereits festgelegt)';
+  el.textContent = text;
+  cacheFeedback(n, ok, text);
+  scheduleSave();
+}
+function getChecked(name){
+  return [...document.querySelectorAll('input[name="'+name+'"]:checked')].map(x=>x.value).sort();
+}
+function afterCheck(n, ok){
+  ensureInit(n);
+  if(ok){
+    wrongStreak[n] = 0;
+  }else{
+    wrongStreak[n] += 1;
+    if(wrongStreak[n] >= 3 && !solutionUnlocked[n]){
+      solutionUnlocked[n] = true;
+      const b = document.getElementById('sb'+n);
+      if(b) b.style.display = 'inline-block';
+    }
+  }
+  scheduleSave();
+}
+function checkMulti(n, name, correct){
+  const chosen = getChecked(name);
+  if(chosen.length === 0){ setNeedAnswer(n); return; }
+
+  const correctSet = new Set(correct);
+  let right = 0;
+  for(const v of chosen){ if(correctSet.has(v)) right++; }
+  const wrong = chosen.length - right;
+  const missing = correct.length - right;
+  const ok = (wrong === 0 && missing === 0);
+
+  const isFirst = !(n in attempted);
+  if(isFirst){ attempted[n] = true; firstCorrect[n] = ok; }
+
+  let msg = '';
+  const expected = correct.length;
+
+  if(chosen.length === 1){
+    msg = (right === 1) ? 'Diese Auswahl ist korrekt.' : 'Diese Auswahl ist nicht korrekt.';
+    msg += ' (Mehrfachauswahl: insgesamt ' + expected + ' richtige Antworten.)';
+  } else if(ok){
+    msg = 'Richtig ✅';
+  } else {
+    msg = 'Teilweise richtig: ' + right + ' richtig, ' + wrong + ' falsch gewählt';
+    if(missing > 0) msg += ', ' + missing + ' richtig(e) fehlt/fehlen';
+    msg += '. (Ausgewählt: ' + chosen.length + ', erwartet: ' + expected + ' richtige.)';
+  }
+
+  setFeedback(n, ok, isFirst, msg);
+  afterCheck(n, ok);
+  if(solutionUnlocked[n] && window.MathJax) MathJax.typesetPromise();
+  saveState();
+}
+function checkSingle(n, name, correct){
+  const chosen = getChecked(name);
+  if(chosen.length===0){ setNeedAnswer(n); return; }
+  const ok = (chosen.length===1 && chosen[0]===correct);
+
+  const isFirst = !(n in attempted);
+  if(isFirst){ attempted[n]=true; firstCorrect[n]=ok; }
+
+  setFeedback(n, ok, isFirst, ok ? 'Richtig ✅' : 'Falsch ❌');
+  afterCheck(n, ok);
+  if(solutionUnlocked[n] && window.MathJax) MathJax.typesetPromise();
+  saveState();
+}
+function checkTwoSingles(n, g1, c1, g2, c2){
+  const a = getChecked(g1);
+  const b = getChecked(g2);
+  if(a.length===0 || b.length===0){
+    const el=document.getElementById('f'+n);
+    el.className='feedback bad';
+    el.textContent='Bitte beantworte beide Teilfragen.';
+    cacheFeedback(n, false, el.textContent);
+    scheduleSave();
+    return;
+  }
+  const ok1 = (a[0]===c1);
+  const ok2 = (b[0]===c2);
+  const ok = ok1 && ok2;
+
+  const isFirst = !(n in attempted);
+  if(isFirst){ attempted[n]=true; firstCorrect[n]=ok; }
+
+  let msg;
+  if(ok){
+    msg = 'Richtig ✅';
+  }else{
+    const parts = [];
+    parts.push('a) ' + (ok1 ? 'richtig' : 'falsch'));
+    parts.push('b) ' + (ok2 ? 'richtig' : 'falsch'));
+    msg = 'Falsch ❌ (' + parts.join(', ') + ')';
+  }
+
+  setFeedback(n, ok, isFirst, msg);
+  afterCheck(n, ok);
+  if(solutionUnlocked[n] && window.MathJax) MathJax.typesetPromise();
+  saveState();
+}
+function checkMatch(n, key, names){
+  const values = names.map(x => document.querySelector('select[name="'+x+'"]').value);
+  if(values.some(v => v === '')){
+    const el=document.getElementById('f'+n);
+    el.className='feedback bad';
+    el.textContent='Bitte fülle alle Zuordnungen aus.';
+    cacheFeedback(n, false, el.textContent);
+    scheduleSave();
+    return;
+  }
+  let correctCount = 0;
+  if(values[0] === key.m1) correctCount++;
+  if(values[1] === key.m2) correctCount++;
+  if(values[2] === key.m3) correctCount++;
+  const ok = (correctCount === 3);
+
+  const isFirst = !(n in attempted);
+  if(isFirst){ attempted[n]=true; firstCorrect[n]=ok; }
+
+  const msg = ok ? 'Richtig ✅' : ('Teilweise richtig: ' + correctCount + ' / 3 Zuordnungen korrekt.');
+  setFeedback(n, ok, isFirst, msg);
+  afterCheck(n, ok);
+  if(solutionUnlocked[n] && window.MathJax) MathJax.typesetPromise();
+  saveState();
+}
+function checkCloze(n, key, names){
+  const values = names.map(x => document.querySelector('select[name="'+x+'"]').value);
+  if(values.some(v => v === '')){
+    const el=document.getElementById('f'+n);
+    el.className='feedback bad';
+    el.textContent='Bitte fülle alle Lücken aus.';
+    cacheFeedback(n, false, el.textContent);
+    scheduleSave();
+    return;
+  }
+  let correctCount = 0;
+  if(values[0] === key.k1) correctCount++;
+  if(values[1] === key.k2) correctCount++;
+  if(values[2] === key.k3) correctCount++;
+  if(values[3] === key.k4) correctCount++;
+  const ok = (correctCount === 4);
+
+  const isFirst = !(n in attempted);
+  if(isFirst){ attempted[n]=true; firstCorrect[n]=ok; }
+
+  const msg = ok ? 'Richtig ✅' : ('Teilweise richtig: ' + correctCount + ' / 4 Lücken korrekt.');
+  setFeedback(n, ok, isFirst, msg);
+  afterCheck(n, ok);
+  if(solutionUnlocked[n] && window.MathJax) MathJax.typesetPromise();
+  saveState();
+}
+function resetUI(n){
+  const sec=document.querySelector('section[data-task="'+n+'"]');
+  sec.querySelectorAll('input').forEach(i=>i.checked=false);
+  sec.querySelectorAll('select').forEach(s=>s.value='');
+
+  const f=document.getElementById('f'+n);
+  if(f){ f.textContent=''; f.className='feedback'; }
+  delete feedbackCache[n];
+  scheduleSave();
+}
+function toggleSolution(n){
+  const sol=document.getElementById('sol'+n);
+  sol.style.display = (sol.style.display==='block') ? 'none' : 'block';
+  if(window.MathJax) MathJax.typesetPromise();
+}
+function showScore(){
+  const d = computeDetail();
+  const s=document.getElementById('score');
+  s.className='feedback';
+  s.textContent =
+    "Kurs: " + COURSE_NAME + " | Arbeitsblatt: " + SHEET_ID + " | " +
+    "Beim ersten Versuch richtig: " + d.correctFirst + " / " + d.total +
+    "   (bereits geprüft: " + d.attemptedCount + " / " + d.total + ")" +
+    "   | Richtig: [" + d.firstCorrectTasks.join(",") + "]" +
+    "   | Falsch: [" + d.firstWrongTasks.join(",") + "]";
+  scheduleSave();
+}
+function showInfo(){
+  const lines = [];
+  lines.push("• Mitgesendet: Name, Kurs (fest), Arbeitsblatt-ID (fest), Score, Erstversuch-Listen, Startzeit, Sendezeit, Arbeitszeit, UserAgent.");
+  lines.push("• Kurs: " + COURSE_NAME);
+  lines.push("• Arbeitsblatt: " + SHEET_ID);
+  if(startedAtISO) lines.push("• Startzeit: " + startedAtISO);
+  if(lastSent && lastSent.ts) lines.push("• Letztes Senden: " + lastSent.ts);
+  document.getElementById('info').textContent = lines.join("  ");
+}
+
+/* ==================== Schnee Toggle ==================== */
+function applySnowVisibility(){
+  const c = document.getElementById('snow');
+  c.style.display = snowEnabled ? 'block' : 'none';
+  scheduleSave();
+}
+function toggleSnow(){
+  snowEnabled = !snowEnabled;
+  applySnowVisibility();
+}
+
+/* ==================== BOOT ==================== */
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('metaCourse').textContent = COURSE_NAME;
+  document.getElementById('metaSheet').textContent = SHEET_ID;
+
+  const st0 = loadState();
+  if(st0 && typeof st0.startedAtISO === "string") {
+    startedAtISO = st0.startedAtISO;
+  } else {
+    startedAtISO = new Date().toISOString();
+  }
+
+  ensureSeed();
+  shuffleMCBlocks();
+
+  const st = loadState();
+  if(st){
+    if(typeof st.snowEnabled === "boolean") snowEnabled = st.snowEnabled;
+
+    if(typeof st.studentName === "string"){
+      studentName = st.studentName;
+      const inp = document.getElementById('studentName');
+      if(inp) inp.value = studentName;
+    }
+
+    if(st.lastSent) lastSent = st.lastSent;
+
+    if(st.attempted) Object.assign(attempted, st.attempted);
+    if(st.firstCorrect) Object.assign(firstCorrect, st.firstCorrect);
+    if(st.wrongStreak) Object.assign(wrongStreak, st.wrongStreak);
+    if(st.solutionUnlocked) Object.assign(solutionUnlocked, st.solutionUnlocked);
+    if(st.feedbackCache) Object.assign(feedbackCache, st.feedbackCache);
+
+    applyInputs(st.inputs);
+    applySelects(st.selects);
+    applyFeedback();
+  }
+
+  document.getElementById('studentName').addEventListener('input', updateSendBtn);
+  document.getElementById('studentName').addEventListener('change', updateSendBtn);
+  updateSendBtn();
+
+  attachAutoSave();
+  applySnowVisibility();
+  saveState();
+
+  if(window.MathJax) MathJax.typesetPromise();
+});
+</script>
+
+<script>
+/* ========= Schneeflocken-Animation (sanft) ========= */
+(function(){
+  const canvas = document.getElementById('snow');
+  const ctx = canvas.getContext('2d');
+
+  let w = 0, h = 0, dpr = 1;
+  let flakes = [];
+  const FLAKE_COUNT = 70;
+  const BASE_SPEED = 0.55;
+  const WIND = 0.15;
+
+  function resize(){
+    dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    w = Math.floor(window.innerWidth);
+    h = Math.floor(window.innerHeight);
+    canvas.width  = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+
+  function rand(min,max){ return min + Math.random()*(max-min); }
+
+  function makeFlake(){
+    return {
+      x: rand(0, w),
+      y: rand(-h, 0),
+      r: rand(1.1, 2.8),
+      vy: rand(BASE_SPEED*0.7, BASE_SPEED*1.6),
+      vx: rand(-WIND, WIND),
+      phase: rand(0, Math.PI*2),
+      wobble: rand(0.4, 1.2),
+      alpha: rand(0.18, 0.38)
+    };
+  }
+
+  function init(){
+    flakes = [];
+    for(let i=0;i<FLAKE_COUNT;i++) flakes.push(makeFlake());
+  }
+
+  function step(){
+    if(canvas.style.display === 'none'){
+      requestAnimationFrame(step);
+      return;
+    }
+
+    ctx.clearRect(0,0,w,h);
+
+    for(const f of flakes){
+      f.phase += 0.01 * f.wobble;
+      f.x += f.vx + Math.sin(f.phase)*0.35;
+      f.y += f.vy;
+
+      if(f.y > h + 10){
+        f.y = rand(-30, -5);
+        f.x = rand(0, w);
+      }
+      if(f.x < -20) f.x = w + 20;
+      if(f.x > w + 20) f.x = -20;
+
+      ctx.globalAlpha = f.alpha;
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI*2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+    }
+
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(step);
+  }
+
+  window.addEventListener('resize', () => { resize(); init(); });
+
+  resize();
+  init();
+  step();
+})();
+</script>
+
+</body>
+</html>
