@@ -1,0 +1,1120 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arbeitsblatt – Ladung und Ladungsträger (interaktiv)</title>
+
+<!-- MathJax -->
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code','select','option'] }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+<style>
+  html, body { height: 100%; }
+  body{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size:12pt;
+    line-height:1.35;
+    margin:2.2cm;
+    background: #f7f7f7;
+    position: relative;
+  }
+
+  /* sanfter Hintergrund */
+  body::before{
+    content:"";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 18% 18%, rgba(0,0,0,0.08), transparent 33%),
+      radial-gradient(circle at 78% 28%, rgba(0,0,0,0.06), transparent 38%),
+      radial-gradient(circle at 30% 78%, rgba(0,0,0,0.05), transparent 45%),
+      radial-gradient(circle at 65% 70%, rgba(0,0,0,0.035), transparent 50%),
+
+      repeating-radial-gradient(circle at 25% 35%,
+        rgba(0,0,0,0.018) 0px, rgba(0,0,0,0.018) 1px,
+        transparent 10px, transparent 24px),
+      repeating-radial-gradient(circle at 78% 55%,
+        rgba(0,0,0,0.014) 0px, rgba(0,0,0,0.014) 1px,
+        transparent 12px, transparent 28px),
+
+      linear-gradient(to bottom, rgba(0,0,0,0.03), transparent 35%);
+    background-attachment: fixed;
+  }
+
+  .page{ position: relative; z-index: 2; }
+
+  .header{border-bottom:1px solid #000; padding-bottom:0.2cm; margin-bottom:0.9cm;}
+  .header table{width:100%; border-collapse:collapse;}
+  .header td{font-weight:bold;}
+  .left{text-align:left;}
+  .center{text-align:center;}
+
+  h1{font-size:14pt; margin:0 0 0.2cm;}
+  .small{font-size:11pt; margin:0 0 0.5cm;}
+  .muted{color:#333;}
+
+  .task{
+    margin:0 0 0.95cm;
+    border: 1px solid rgba(0,0,0,0.16);
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.88);
+  }
+
+  /* helle Hintergründe rotierend */
+  .task:nth-of-type(8n+1){ background: rgba(235, 246, 255, 0.88); }
+  .task:nth-of-type(8n+2){ background: rgba(237, 255, 245, 0.88); }
+  .task:nth-of-type(8n+3){ background: rgba(255, 244, 235, 0.88); }
+  .task:nth-of-type(8n+4){ background: rgba(246, 240, 255, 0.88); }
+  .task:nth-of-type(8n+5){ background: rgba(255, 252, 232, 0.88); }
+  .task:nth-of-type(8n+6){ background: rgba(240, 249, 255, 0.88); }
+  .task:nth-of-type(8n+7){ background: rgba(252, 240, 248, 0.88); }
+  .task:nth-of-type(8n+8){ background: rgba(241, 255, 236, 0.88); }
+
+  .nr{font-weight:bold; display:inline-block; width:2em;}
+  .prompt{margin:0.2cm 0 0.25cm; font-style:italic;}
+
+  .mc label{display:block; margin:6px 0;}
+  .mc input{margin-right:8px;}
+
+  .btns{display:flex; gap:10px; margin:0.25cm 0; flex-wrap:wrap;}
+  button{font-size:12pt; padding:6px 12px; border:1px solid #000; background:#fff; cursor:pointer;}
+  button:disabled{opacity:0.6; cursor:not-allowed;}
+
+  .feedback{margin-top:0.2cm; font-weight:bold;}
+  .ok{color:#0a7a2f;}
+  .bad{color:#b00020;}
+  .hint{font-size:11pt; font-weight:normal; color:#333;}
+
+  .solutionBtn{display:none; margin-top:0.15cm;}
+  .solution{display:none; border-top:1px solid #000; margin-top:0.25cm; padding-top:0.25cm;}
+  .solution h3{font-size:12pt; margin:0 0 0.15cm;}
+  .solution .small2{font-size:11pt;}
+  .solution ul{margin:0.15cm 0 0.15cm 1.1cm;}
+  .solution .calc{margin:0.2cm 0; padding:0.15cm 0.2cm; border:1px solid #000; background:#fff;}
+
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 10px 14px;
+    margin-top: 8px;
+    align-items:center;
+  }
+  .term{font-weight:bold;}
+  select{
+    font-size:12pt;
+    padding:4px 6px;
+    border:1px solid rgba(0,0,0,0.4);
+    background:#fff;
+    width:100%;
+    max-width: 760px;
+  }
+  .cloze{
+    margin-top: 8px;
+    padding: 8px 10px;
+    border: 1px solid rgba(0,0,0,0.18);
+    background: rgba(255,255,255,0.94);
+  }
+  .cloze-line{margin: 8px 0;}
+  .blank{display:inline-block; min-width: 180px; vertical-align: middle;}
+
+  /* Bild-Einbettung */
+  .taskTop{
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+    justify-content: space-between;
+  }
+  .taskText{flex: 1 1 auto; min-width: 240px;}
+  .taskImgWrap{
+    width: 320px;
+    max-width: 40%;
+    border: 1px solid rgba(0,0,0,0.12);
+    background: rgba(255,255,255,0.55);
+    padding: 6px;
+    max-height: 260px;
+  }
+  .taskImg{
+    width: 100%;
+    height: auto;
+    max-height: 248px;
+    object-fit: contain;
+    display:block;
+  }
+  @media (max-width: 900px){
+    .taskTop{flex-direction: column;}
+    .taskImgWrap{max-width: 100%; width: 100%;}
+  }
+
+  .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;}
+
+  .topRow{
+    display:flex;
+    gap:12px;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    margin-bottom: 0.2cm;
+  }
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .field label{font-size:11pt; font-weight:bold;}
+  .field input{
+    font-size:12pt;
+    padding:6px 8px;
+    border:1px solid rgba(0,0,0,0.35);
+    background:#fff;
+    min-width: 280px;
+    max-width: 520px;
+  }
+  .smallrow{font-size:11pt; color:#333; margin-top:-2px;}
+
+  .metaBox{
+    font-size:11pt;
+    padding:6px 10px;
+    border:1px solid rgba(0,0,0,0.18);
+    background: rgba(255,255,255,0.75);
+    max-width: 720px;
+  }
+  .metaBox b{font-weight:bold;}
+
+  @media print{
+    body::before{display:none;}
+    button{display:none;}
+    .solutionBtn{display:none !important;}
+    .field{display:none;}
+    .metaBox{display:none;}
+  }
+</style>
+</head>
+
+<body>
+<div class="page">
+
+  <!-- schöner Kopf -->
+  <div class="header">
+    <table>
+      <tr>
+        <td class="left">HBL</td>
+        <td class="center">Physik GK 11</td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+
+  <h1>Aufgaben zu „Ladung und Ladungsträger“</h1>
+
+  <!-- Name + Buttons -->
+  <div class="topRow">
+    <div class="field">
+      <label for="studentName">Name (Pflicht)</label>
+      <input id="studentName" type="text" placeholder="Vorname Nachname" autocomplete="name">
+      <div class="smallrow">Am Ende: „Ergebnisse an HBL senden“ (benötigt Internet).</div>
+    </div>
+
+    <div class="btns" style="margin:0;">
+      <button onclick="showScore()">Ergebnis anzeigen</button>
+      <button id="sendBtn" onclick="sendResults()" disabled>Ergebnisse an HBL senden</button>
+      <button onclick="showInfo()">Info</button>
+    </div>
+  </div>
+
+  <div class="metaBox">
+    <b>Kurs:</b> <span id="metaCourse"></span> &nbsp;|&nbsp;
+    <b>Arbeitsblatt:</b> <span id="metaSheet"></span>
+  </div>
+
+  <p class="small" style="margin-top:0.45cm;">
+    <b>Regel:</b> Gezählt wird nur, ob eine Aufgabe <b>beim ersten Prüfen</b> richtig gelöst wurde.
+    Wenn du eine Aufgabe <b>3× hintereinander falsch</b> prüfst, erscheint <b>„Lösungsweg anzeigen“</b>.
+    <span class="muted">(Antwortreihenfolge ist pro Gerät gemischt. Fortschritt wird lokal gespeichert.)</span>
+  </p>
+
+  <div id="score" class="feedback" style="margin-top:-0.15cm;"></div>
+  <div id="info" class="hint" style="margin-top:0.2cm;"></div>
+
+  <!-- ===================== 1 ===================== -->
+  <section class="task" data-task="1">
+    <div><span class="nr">1.</span>
+      <b>Nenne zwei Beobachtungen, die beim Kämmen der Haare auftreten, und erkläre kurz, wie sie mit elektrischer Ladung zusammenhängen.</b>
+    </div>
+    <div class="prompt">Mehrfachauswahl (3 Antworten richtig)</div>
+
+    <div class="mc" data-shuffle="t1">
+      <label><input type="checkbox" name="t1" value="a"> Haare stehen ab, weil sich gleichnamig geladene Haarsträhnen abstoßen.</label>
+      <label><input type="checkbox" name="t1" value="b"> Ein Kamm kann Papier anziehen, weil sich Ladungen im Papier trennen (Influenz).</label>
+      <label><input type="checkbox" name="t1" value="c"> Beim Kämmen werden durch Reibung Elektronen übertragen.</label>
+      <label><input type="checkbox" name="t1" value="d"> Papier wird angezogen, weil Papier immer dauerhaft negativ geladen ist.</label>
+      <label><input type="checkbox" name="t1" value="e"> Haare stehen ab, weil sich das Erdmagnetfeld verändert.</label>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkMulti(1,'t1',['a','b','c'])">Prüfen</button>
+      <button onclick="resetUI(1)">Zurücksetzen</button>
+    </div>
+
+    <div id="f1" class="feedback"></div>
+    <button id="sb1" class="solutionBtn" onclick="toggleSolution(1)">Lösungsweg anzeigen</button>
+    <div id="sol1" class="solution">
+      <h3>Lösungsweg (Aufgabe 1)</h3>
+      <div class="small2">
+        <ul>
+          <li><b>Reibung:</b> Beim Kämmen werden <b>Elektronen</b> übertragen → Kamm/Haare werden geladen.</li>
+          <li><b>Abstoßung:</b> Gleichnamig geladene Haarsträhnen stoßen sich ab → Haare stehen ab.</li>
+          <li><b>Influenz:</b> Im Papier werden Ladungen getrennt → Netto-Anziehung.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 2 ===================== -->
+  <section class="task" data-task="2">
+    <div class="taskTop">
+      <div class="taskText">
+        <div><span class="nr">2.</span>
+          <b>Beschreibe, wie ein Elektroskop funktioniert und wie man damit erkennt, dass ein Körper elektrisch geladen ist.</b>
+        </div>
+        <div class="prompt">Zuordnung (3 Zuordnungen richtig)</div>
+      </div>
+
+      <div class="taskImgWrap" title="Elektroskop">
+        <img class="taskImg"
+             src="https://l1neback3r.github.io/elektrisches-Feld/Elektroskop.png"
+             alt="">
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="term">Influenz (Annäherung)</div>
+      <div>
+        <select name="t2_m1">
+          <option value="">– bitte auswählen –</option>
+          <option value="A">Die Blättchen spreizen sich, weil sie entgegengesetzt geladen sind und sich anziehen.</option>
+          <option value="B">Bei Annäherung eines geladenen Körpers werden Ladungen im Elektroskop umverteilt.</option>
+          <option value="C">Ein Elektroskop misst direkt die Stromstärke über die Blattspreizung.</option>
+          <option value="D">Bei Berührung kann Ladung übertragen werden; die Spreizung kann bestehen bleiben.</option>
+          <option value="E">Die Blättchen spreizen sich durch Abstoßung gleichnamiger Ladungen.</option>
+        </select>
+      </div>
+
+      <div class="term">Abstoßung (Blättchen)</div>
+      <div>
+        <select name="t2_m2">
+          <option value="">– bitte auswählen –</option>
+          <option value="A">Bei Berührung kann Ladung übertragen werden; die Spreizung kann bestehen bleiben.</option>
+          <option value="B">Bei Annäherung eines geladenen Körpers werden Ladungen im Elektroskop umverteilt.</option>
+          <option value="C">Die Blättchen spreizen sich durch Abstoßung gleichnamiger Ladungen.</option>
+          <option value="D">Ein Elektroskop zeigt nur Magnetfelder an, keine elektrische Ladung.</option>
+          <option value="E">Die Blättchen spreizen sich, weil sie entgegengesetzt geladen sind und sich anziehen.</option>
+        </select>
+      </div>
+
+      <div class="term">Berührung (Kontakt)</div>
+      <div>
+        <select name="t2_m3">
+          <option value="">– bitte auswählen –</option>
+          <option value="A">Bei Berührung kann Ladung übertragen werden; die Spreizung kann dann bestehen bleiben.</option>
+          <option value="B">Die Blättchen spreizen sich, weil sie entgegengesetzt geladen sind und sich anziehen.</option>
+          <option value="C">Ein Elektroskop misst nur die Stromstärke, nicht Ladung.</option>
+          <option value="D">Die Spreizung entsteht ausschließlich durch Luftströmungen.</option>
+          <option value="E">Influenz bedeutet: Protonen wandern im Metall nach oben.</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkMatch(2, {m1:'B', m2:'C', m3:'A'}, ['t2_m1','t2_m2','t2_m3'])">Prüfen</button>
+      <button onclick="resetUI(2)">Zurücksetzen</button>
+    </div>
+
+    <div id="f2" class="feedback"></div>
+    <button id="sb2" class="solutionBtn" onclick="toggleSolution(2)">Lösungsweg anzeigen</button>
+    <div id="sol2" class="solution">
+      <h3>Lösungsweg (Aufgabe 2)</h3>
+      <div class="small2">
+        <ul>
+          <li><b>Influenz:</b> Ladungsverschiebung im Elektroskop.</li>
+          <li><b>Abstoßung:</b> Blättchen gleichnamig geladen → Spreizung.</li>
+          <li><b>Kontakt:</b> Ladung kann übertragen werden → Spreizung bleibt evtl. bestehen.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 3 ===================== -->
+  <section class="task" data-task="3">
+    <div><span class="nr">3.</span>
+      <b>Erkläre, warum die pendelnde Metallkugel im Hochspannungs-Stromkreis abwechselnd positiv und negativ geladen wird.</b>
+    </div>
+    <div class="prompt">Lückentext mit Wortbank (6 Lücken richtig)</div>
+
+    <div class="cloze">
+      <div class="cloze-line">
+        Beim Kontakt mit einer Elektrode nimmt die Metallkugel
+        <span class="blank">
+          <select name="t3_b1">
+            <option value="">– auswählen –</option>
+            <option value="Elektronen">Elektronen</option>
+            <option value="Protonen">Protonen</option>
+            <option value="Neutronen">Neutronen</option>
+            <option value="Lichtquanten">Lichtquanten</option>
+            <option value="Ionen">Ionen</option>
+          </select>
+        </span>
+        auf oder gibt
+        <span class="blank">
+          <select name="t3_b2">
+            <option value="">– auswählen –</option>
+            <option value="Elektronen">Elektronen</option>
+            <option value="Protonen">Protonen</option>
+            <option value="Wärme">Wärme</option>
+            <option value="Druck">Druck</option>
+            <option value="Neutronen">Neutronen</option>
+          </select>
+        </span>
+        ab.
+      </div>
+
+      <div class="cloze-line">
+        Danach trägt sie ein bestimmtes Ladungs-
+        <span class="blank">
+          <select name="t3_b3">
+            <option value="">– auswählen –</option>
+            <option value="Vorzeichen">Vorzeichen</option>
+            <option value="Volumen">Volumen</option>
+            <option value="Gewicht">Gewicht</option>
+            <option value="Farbe">Farbe</option>
+            <option value="Ort">Ort</option>
+          </select>
+        </span>
+        und wird von der gleichnamigen Elektrode
+        <span class="blank">
+          <select name="t3_b4">
+            <option value="">– auswählen –</option>
+            <option value="abgestoßen">abgestoßen</option>
+            <option value="angezogen">angezogen</option>
+            <option value="abgekühlt">abgekühlt</option>
+            <option value="magnetisiert">magnetisiert</option>
+            <option value="neutralisiert">neutralisiert</option>
+          </select>
+        </span>.
+      </div>
+
+      <div class="cloze-line">
+        Zur anderen Elektrode wird sie dagegen
+        <span class="blank">
+          <select name="t3_b5">
+            <option value="">– auswählen –</option>
+            <option value="angezogen">angezogen</option>
+            <option value="abgestoßen">abgestoßen</option>
+            <option value="unsichtbar">unsichtbar</option>
+            <option value="erwärmt">erwärmt</option>
+            <option value="isoliert">isoliert</option>
+          </select>
+        </span>
+        und beim nächsten Kontakt werden Elektronen in die andere Richtung übertragen, sodass das
+        <span class="blank">
+          <select name="t3_b6">
+            <option value="">– auswählen –</option>
+            <option value="Vorzeichen">Vorzeichen</option>
+            <option value="Material">Material</option>
+            <option value="Volumen">Volumen</option>
+            <option value="Ort">Ort</option>
+            <option value="Gewicht">Gewicht</option>
+          </select>
+        </span>
+        wechselt.
+      </div>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkCloze(3, {k1:'Elektronen', k2:'Elektronen', k3:'Vorzeichen', k4:'abgestoßen', k5:'angezogen', k6:'Vorzeichen'}, ['t3_b1','t3_b2','t3_b3','t3_b4','t3_b5','t3_b6'])">Prüfen</button>
+      <button onclick="resetUI(3)">Zurücksetzen</button>
+    </div>
+
+    <div id="f3" class="feedback"></div>
+    <button id="sb3" class="solutionBtn" onclick="toggleSolution(3)">Lösungsweg anzeigen</button>
+    <div id="sol3" class="solution">
+      <h3>Lösungsweg (Aufgabe 3)</h3>
+      <div class="small2">
+        <ul>
+          <li>In Leitern bewegen sich <b>Elektronen</b>.</li>
+          <li>Beim <b>Kontakt</b> werden Elektronen übertragen → Ladungs-<b>Vorzeichen</b> entsteht.</li>
+          <li>Gleichnamige Ladungen <b>stoßen sich ab</b>, ungleichnamige ziehen sich <b>an</b> → Pendelbewegung.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 4 ===================== -->
+  <section class="task" data-task="4">
+    <div><span class="nr">4.</span>
+      <b>Berechne die mittlere Stromstärke, wenn eine Ladung von 18 nC in einer Zeit von 0,120 s übertragen wird.</b>
+    </div>
+    <div class="prompt">Einfachauswahl (1 Antwort richtig)</div>
+
+    <div class="mc" data-shuffle="t4">
+      <label><input type="radio" name="t4" value="a"> \(1{,}5\cdot10^{-7}\,\mathrm{A}\)</label>
+      <label><input type="radio" name="t4" value="b"> \(1{,}5\cdot10^{-10}\,\mathrm{A}\)</label>
+      <label><input type="radio" name="t4" value="c"> \(6{,}7\cdot10^{-8}\,\mathrm{A}\)</label>
+      <label><input type="radio" name="t4" value="d"> \(2{,}2\cdot10^{-6}\,\mathrm{A}\)</label>
+      <label><input type="radio" name="t4" value="e"> \(1{,}5\cdot10^{7}\,\mathrm{A}\)</label>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkSingle(4,'t4','a')">Prüfen</button>
+      <button onclick="resetUI(4)">Zurücksetzen</button>
+    </div>
+
+    <div id="f4" class="feedback"></div>
+    <button id="sb4" class="solutionBtn" onclick="toggleSolution(4)">Lösungsweg anzeigen</button>
+    <div id="sol4" class="solution">
+      <h3>Lösungsweg (Aufgabe 4)</h3>
+      <div class="small2">
+        <div class="calc">\[\; I=\frac{Q}{t} \;\]</div>
+        <div class="calc">
+          \[
+            Q = 18\,\mathrm{nC} = 18\cdot 10^{-9}\,\mathrm{C},\qquad
+            t = 0{,}120\,\mathrm{s}
+          \]
+        </div>
+        <div class="calc">
+          \[
+            I=\frac{18\cdot 10^{-9}}{0{,}120}\,\mathrm{A}
+            = 1{,}5\cdot 10^{-7}\,\mathrm{A}
+          \]
+        </div>
+        <div><b>Ergebnis:</b> \(I=1{,}5\cdot10^{-7}\,\mathrm{A}\)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 5 ===================== -->
+  <section class="task" data-task="5">
+    <div><span class="nr">5.</span>
+      <b>Beschreibe einen Vorgang aus dem Alltag, bei dem elektrische Ladungen übertragen werden.</b>
+    </div>
+    <div class="prompt">Mehrfachauswahl (4 Antworten richtig)</div>
+
+    <div class="mc" data-shuffle="t5">
+      <label><input type="checkbox" name="t5" value="a"> Reibung (z. B. Schuh–Teppich) kann Elektronen übertragen.</label>
+      <label><input type="checkbox" name="t5" value="b"> Ein Knacken/Funke ist ein schneller Ladungsausgleich (Entladung).</label>
+      <label><input type="checkbox" name="t5" value="c"> Metalle leiten gut; Ladung kann beim Berühren schnell abfließen.</label>
+      <label><input type="checkbox" name="t5" value="d"> Ein Funke entsteht nur, wenn ein Körper magnetisiert wurde.</label>
+      <label><input type="checkbox" name="t5" value="e"> Trockene Luft begünstigt Entladungen, weil Ladung schlechter abfließt.</label>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkMulti(5,'t5',['a','b','c','e'])">Prüfen</button>
+      <button onclick="resetUI(5)">Zurücksetzen</button>
+    </div>
+
+    <div id="f5" class="feedback"></div>
+    <button id="sb5" class="solutionBtn" onclick="toggleSolution(5)">Lösungsweg anzeigen</button>
+    <div id="sol5" class="solution">
+      <h3>Lösungsweg (Aufgabe 5)</h3>
+      <div class="small2">
+        <ul>
+          <li>Reibung → Elektronenübertrag.</li>
+          <li>Entladung → kurzer Stromstoß (Knacken/Funke).</li>
+          <li>Trockene Luft → weniger Ableitung.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 6 ===================== -->
+  <section class="task" data-task="6">
+    <div><span class="nr">6.</span>
+      <b>Eine Stromstärke von \(2{,}5\cdot10^{-6}\,\mathrm{A}\) wirkt. Wie lange dauert es, bis \(Q=32\,\mathrm{nC}\) übertragen wurde?</b>
+    </div>
+    <div class="prompt">Einfachauswahl (1 Antwort richtig)</div>
+
+    <div class="mc" data-shuffle="t6">
+      <label><input type="radio" name="t6" value="a"> \(0{,}0128\,\mathrm{s}\)</label>
+      <label><input type="radio" name="t6" value="b"> \(0{,}128\,\mathrm{s}\)</label>
+      <label><input type="radio" name="t6" value="c"> \(12{,}8\,\mathrm{s}\)</label>
+      <label><input type="radio" name="t6" value="d"> \(1{,}28\cdot10^{-6}\,\mathrm{s}\)</label>
+      <label><input type="radio" name="t6" value="e"> \(0{,}0128\,\mathrm{s}\) ist unmöglich, weil nC keine Ladungseinheit ist.</label>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkSingle(6,'t6','a')">Prüfen</button>
+      <button onclick="resetUI(6)">Zurücksetzen</button>
+    </div>
+
+    <div id="f6" class="feedback"></div>
+    <button id="sb6" class="solutionBtn" onclick="toggleSolution(6)">Lösungsweg anzeigen</button>
+    <div id="sol6" class="solution">
+      <h3>Lösungsweg (Aufgabe 6)</h3>
+      <div class="small2">
+        <div class="calc">\[\; t=\frac{Q}{I} \;\]</div>
+        <div class="calc">
+          \[
+            Q=32\,\mathrm{nC}=32\cdot10^{-9}\,\mathrm{C},\qquad
+            I=2{,}5\cdot10^{-6}\,\mathrm{A}
+          \]
+        </div>
+        <div class="calc">
+          \[
+            t=\frac{32\cdot10^{-9}}{2{,}5\cdot10^{-6}}\,\mathrm{s}
+            =0{,}0128\,\mathrm{s}
+          \]
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 7 ===================== -->
+  <section class="task" data-task="7">
+    <div><span class="nr">7.</span>
+      <b>Durch Reibung werden \(4{,}5\cdot10^{9}\) Elektronen übertragen. Berechne die Ladung \(Q\).</b>
+    </div>
+    <div class="prompt">Einfachauswahl (1 Antwort richtig)</div>
+
+    <div class="mc" data-shuffle="t7">
+      <label><input type="radio" name="t7" value="a"> \(-7{,}2\cdot10^{-10}\,\mathrm{C}\)</label>
+      <label><input type="radio" name="t7" value="b"> \(+7{,}2\cdot10^{-10}\,\mathrm{C}\)</label>
+      <label><input type="radio" name="t7" value="c"> \(-7{,}2\cdot10^{-9}\,\mathrm{C}\)</label>
+      <label><input type="radio" name="t7" value="d"> \(-7{,}2\cdot10^{-10}\,\mathrm{A}\)</label>
+      <label><input type="radio" name="t7" value="e"> \(-2{,}8\cdot10^{-9}\,\mathrm{C}\)</label>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkSingle(7,'t7','a')">Prüfen</button>
+      <button onclick="resetUI(7)">Zurücksetzen</button>
+    </div>
+
+    <div id="f7" class="feedback"></div>
+    <button id="sb7" class="solutionBtn" onclick="toggleSolution(7)">Lösungsweg anzeigen</button>
+    <div id="sol7" class="solution">
+      <h3>Lösungsweg (Aufgabe 7)</h3>
+      <div class="small2">
+        <div class="calc">\[\; Q = n\cdot(-e) \;\]</div>
+        <div class="calc">
+          \[
+            Q=4{,}5\cdot10^{9}\cdot(-1{,}60\cdot10^{-19})\,\mathrm{C}
+            =-7{,}2\cdot10^{-10}\,\mathrm{C}
+          \]
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 8 ===================== -->
+  <section class="task" data-task="8">
+    <div><span class="nr">8.</span>
+      <b>Eine Kugel besitzt \(Q=-1{,}0\,\mathrm{nC}\). Wie viele zusätzliche Elektronen sind das?</b>
+    </div>
+    <div class="prompt">Mehrfachauswahl (4 Antworten richtig)</div>
+
+    <div class="mc" data-shuffle="t8">
+      <label><input type="checkbox" name="t8" value="a"> Negative Ladung bedeutet Elektronenüberschuss.</label>
+      <label><input type="checkbox" name="t8" value="b"> Es gilt \(n=\frac{|Q|}{e}\).</label>
+      <label><input type="checkbox" name="t8" value="c"> \(1{,}0\,\mathrm{nC}=1{,}0\cdot10^{-9}\,\mathrm{C}\).</label>
+      <label><input type="checkbox" name="t8" value="d"> \(n=6{,}25\cdot10^{9}\).</label>
+      <label><input type="checkbox" name="t8" value="e"> Negative Ladung bedeutet Protonenüberschuss.</label>
+    </div>
+
+    <div class="btns">
+      <button onclick="checkMulti(8,'t8',['a','b','c','d'])">Prüfen</button>
+      <button onclick="resetUI(8)">Zurücksetzen</button>
+    </div>
+
+    <div id="f8" class="feedback"></div>
+    <button id="sb8" class="solutionBtn" onclick="toggleSolution(8)">Lösungsweg anzeigen</button>
+    <div id="sol8" class="solution">
+      <h3>Lösungsweg (Aufgabe 8)</h3>
+      <div class="small2">
+        <div class="calc">\[\; n=\frac{|Q|}{e}=\frac{1{,}0\cdot10^{-9}}{1{,}60\cdot10^{-19}}=6{,}25\cdot10^{9}\;\]</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ==================== KONFIG (fest verankert) ==================== */
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbwNSC_7Jbv7j-NZpVHpWH41R-E97eVqg6BYLHI5N-Cn9cb7iGWHmiXiJk3RciO2gbM8XQ/exec";
+const SHEET_ID = "elektrische Ladung";
+const COURSE_NAME = "GK Ph 11 2025";
+const STORE_KEY = "hbl_gk11_elektrische_ladung_v1";
+
+/* ==================== STATE ==================== */
+const attempted = {};
+const firstCorrect = {};
+const wrongStreak = {};
+const solutionUnlocked = {};
+const feedbackCache = {};
+let seed = null;
+
+let studentName = "";
+let startedAtISO = null;
+let lastSent = null;
+
+/* ==================== SAVE/LOAD ==================== */
+function saveState(){
+  const data = {
+    seed, studentName, startedAtISO, lastSent,
+    attempted, firstCorrect, wrongStreak, solutionUnlocked, feedbackCache,
+    inputs: snapshotInputs(),
+    selects: snapshotSelects()
+  };
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(data)); }catch(e){}
+}
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return null;
+    return JSON.parse(raw);
+  }catch(e){ return null; }
+}
+let saveTimer = null;
+function scheduleSave(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveState, 120);
+}
+function snapshotInputs(){
+  const result = {};
+  const names = new Set([...document.querySelectorAll('input[name]')].map(i=>i.name));
+  for(const n of names){
+    const checked = [...document.querySelectorAll('input[name="'+n+'"]:checked')].map(x=>x.value).sort();
+    result[n] = checked;
+  }
+  return result;
+}
+function snapshotSelects(){
+  const result = {};
+  document.querySelectorAll('select[name]').forEach(s => result[s.name] = s.value);
+  return result;
+}
+function applyInputs(saved){
+  if(!saved) return;
+  for(const [name, arr] of Object.entries(saved)){
+    const set = new Set(arr || []);
+    document.querySelectorAll('input[name="'+name+'"]').forEach(inp => {
+      inp.checked = set.has(inp.value);
+    });
+  }
+}
+function applySelects(saved){
+  if(!saved) return;
+  for(const [name, val] of Object.entries(saved)){
+    const sel = document.querySelector('select[name="'+name+'"]');
+    if(sel) sel.value = val;
+  }
+}
+function applyFeedback(){
+  for(const [k,v] of Object.entries(feedbackCache)){
+    const n = Number(k);
+    const el = document.getElementById('f'+n);
+    if(el && v && typeof v.text === "string"){
+      el.textContent = v.text;
+      el.className = 'feedback ' + (v.okClass || '');
+    }
+  }
+  for(const [k,unlocked] of Object.entries(solutionUnlocked)){
+    const n = Number(k);
+    if(unlocked){
+      const b = document.getElementById('sb'+n);
+      if(b) b.style.display = 'inline-block';
+    }
+  }
+}
+function attachAutoSave(){
+  document.querySelectorAll('input, select').forEach(el=>{
+    el.addEventListener('change', scheduleSave);
+    el.addEventListener('input', scheduleSave);
+  });
+}
+
+/* ==================== SHUFFLE ==================== */
+function mulberry32(a){
+  return function(){
+    let t = a += 0x6D2B79F5;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  }
+}
+function ensureSeed(){
+  const st = loadState();
+  if(st && typeof st.seed === "number"){
+    seed = st.seed;
+    return;
+  }
+  seed = Math.floor(Math.random()*1e9);
+  saveState();
+}
+function shuffleArray(arr, rnd){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(rnd()*(i+1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+function shuffleMCBlocks(){
+  const blocks = document.querySelectorAll('.mc[data-shuffle]');
+  blocks.forEach((block, idx)=>{
+    const rnd = mulberry32((seed + 1013*(idx+1)) >>> 0);
+    const labels = [...block.querySelectorAll('label')];
+    shuffleArray(labels, rnd);
+    labels.forEach(l => block.appendChild(l));
+  });
+}
+
+/* ==================== UI (Name) ==================== */
+function updateSendBtn(){
+  const btn = document.getElementById('sendBtn');
+  studentName = (document.getElementById('studentName').value || "").trim();
+  btn.disabled = (studentName.length === 0);
+  scheduleSave();
+}
+
+/* ==================== SCORE / DETAILS ==================== */
+function computeDetail(){
+  const total = 8;
+  let correctFirst = 0;
+  let attemptedCount = 0;
+  const firstCorrectTasks = [];
+  const firstWrongTasks = [];
+
+  for(let i=1;i<=total;i++){
+    if(attempted[i]){
+      attemptedCount++;
+      if(firstCorrect[i]){
+        correctFirst++;
+        firstCorrectTasks.push(i);
+      }else{
+        firstWrongTasks.push(i);
+      }
+    }
+  }
+  return {
+    total, correctFirst, attemptedCount,
+    scoreStr: correctFirst + "/" + total,
+    firstCorrectTasks, firstWrongTasks
+  };
+}
+
+/* ==================== SEND (no-cors) ==================== */
+function showSentOk(detail){
+  lastSent = { name: studentName, course: COURSE_NAME, sheetId: SHEET_ID, score: detail.scoreStr, ts: new Date().toISOString() };
+  const s = document.getElementById('score');
+  s.className = 'feedback ok';
+  s.textContent =
+    "Gesendet ✅  (" + studentName +
+    " | " + COURSE_NAME +
+    " | " + SHEET_ID +
+    " | " + detail.scoreStr +
+    " | Erstversuch richtig: [" + detail.firstCorrectTasks.join(",") + "]" +
+    " | Erstversuch falsch: [" + detail.firstWrongTasks.join(",") + "]" +
+    ")";
+  scheduleSave();
+}
+function showSentFail(msg){
+  const s = document.getElementById('score');
+  s.className = 'feedback bad';
+  s.textContent = "Senden fehlgeschlagen ❌ (" + msg + ")";
+  scheduleSave();
+}
+
+async function sendResults(){
+  if(!WEBAPP_URL){
+    showSentFail("WEBAPP_URL ist leer.");
+    return;
+  }
+
+  const name = (document.getElementById('studentName').value || "").trim();
+  if(!name){
+    const s = document.getElementById('score');
+    s.className = 'feedback bad';
+    s.textContent = 'Bitte zuerst den Namen eintragen.';
+    return;
+  }
+
+  const detail = computeDetail();
+
+  const sentAtISO = new Date().toISOString();
+  const startedAt = startedAtISO ? new Date(startedAtISO) : new Date();
+  const sentAt = new Date(sentAtISO);
+  const workTimeSec = Math.max(0, Math.round((sentAt.getTime() - startedAt.getTime()) / 1000));
+
+  const payload = {
+    name: name,
+    classCode: COURSE_NAME,
+    sheetId: SHEET_ID,
+
+    score: detail.scoreStr,
+    attemptedCount: detail.attemptedCount,
+    firstCorrectTasks: detail.firstCorrectTasks.join(","),
+    firstWrongTasks: detail.firstWrongTasks.join(","),
+
+    startedAt: startedAtISO,
+    sentAt: sentAtISO,
+    workTimeSec: workTimeSec,
+
+    ua: navigator.userAgent
+  };
+
+  const btn = document.getElementById('sendBtn');
+  btn.disabled = true;
+
+  try{
+    await fetch(WEBAPP_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    showSentOk(detail);
+  }catch(e){
+    showSentFail(String(e));
+  }finally{
+    setTimeout(() => { updateSendBtn(); }, 700);
+  }
+}
+
+/* ==================== CHECK-LOGIK ==================== */
+function ensureInit(n){
+  if(!(n in wrongStreak)) wrongStreak[n] = 0;
+  if(!(n in solutionUnlocked)) solutionUnlocked[n] = false;
+}
+function cacheFeedback(n, ok, msg){
+  feedbackCache[n] = { text: msg, okClass: ok ? 'ok' : 'bad' };
+}
+function setNeedAnswer(n){
+  const el=document.getElementById('f'+n);
+  el.className='feedback bad';
+  el.textContent='Bitte wähle zuerst eine Antwort aus.';
+  cacheFeedback(n, false, el.textContent);
+  scheduleSave();
+}
+function setFeedback(n, ok, isFirst, msg){
+  const el = document.getElementById('f'+n);
+  el.className = 'feedback ' + (ok ? 'ok' : 'bad');
+  let text = msg ?? (ok ? 'Richtig ✅' : 'Falsch ❌');
+  if(!isFirst) text += '  (Wertung bereits festgelegt)';
+  el.textContent = text;
+  cacheFeedback(n, ok, text);
+  scheduleSave();
+}
+function getChecked(name){
+  return [...document.querySelectorAll('input[name="'+name+'"]:checked')].map(x=>x.value).sort();
+}
+function afterCheck(n, ok){
+  ensureInit(n);
+  if(ok){
+    wrongStreak[n] = 0;
+  }else{
+    wrongStreak[n] += 1;
+    if(wrongStreak[n] >= 3 && !solutionUnlocked[n]){
+      solutionUnlocked[n] = true;
+      const b = document.getElementById('sb'+n);
+      if(b) b.style.display = 'inline-block';
+    }
+  }
+  scheduleSave();
+}
+
+function checkMulti(n, name, correct){
+  const chosen = getChecked(name);
+  if(chosen.length === 0){ setNeedAnswer(n); return; }
+
+  const correctSet = new Set(correct);
+  let right = 0;
+  for(const v of chosen){ if(correctSet.has(v)) right++; }
+  const wrong = chosen.length - right;
+  const missing = correct.length - right;
+  const ok = (wrong === 0 && missing === 0);
+
+  const isFirst = !(n in attempted);
+  if(isFirst){ attempted[n] = true; firstCorrect[n] = ok; }
+
+  let msg = '';
+  const expected = correct.length;
+
+  if(chosen.length === 1){
+    msg = (right === 1) ? 'Diese Auswahl ist korrekt.' : 'Diese Auswahl ist nicht korrekt.';
+    msg += ' (Mehrfachauswahl: insgesamt ' + expected + ' richtige Antworten.)';
+  } else if(ok){
+    msg = 'Richtig ✅';
+  } else {
+    msg = 'Teilweise richtig: ' + right + ' richtig, ' + wrong + ' falsch gewählt';
+    if(missing > 0) msg += ', ' + missing + ' richtig(e) fehlt/fehlen';
+    msg += '. (Ausgewählt: ' + chosen.length + ', erwartet: ' + expected + ' richtige.)';
+  }
+
+  setFeedback(n, ok, isFirst, msg);
+  afterCheck(n, ok);
+  if(solutionUnlocked[n] && window.MathJax) MathJax.typesetPromise();
+  saveState();
+}
+
+function checkSingle(n, name, correct){
+  const chosen = getChecked(name);
+  if(chosen.length===0){ setNeedAnswer(n); return; }
+  const ok = (chosen.length===1 && chosen[0]===correct);
+
+  const isFirst = !(n in attempted);
+  if(isFirst){ attempted[n]=true; firstCorrect[n]=ok; }
+
+  setFeedback(n, ok, isFirst, ok ? 'Richtig ✅' : 'Falsch ❌');
+  afterCheck(n, ok);
+  if(solutionUnlocked[n] && window.MathJax) MathJax.typesetPromise();
+  saveState();
+}
+
+function checkMatch(n, key, names){
+  const values = names.map(x => document.querySelector('select[name="'+x+'"]').value);
+  if(values.some(v => v === '')){
+    const el=document.getElementById('f'+n);
+    el.className='feedback bad';
+    el.textContent='Bitte fülle alle Zuordnungen aus.';
+    cacheFeedback(n, false, el.textContent);
+    scheduleSave();
+    return;
+  }
+  let correctCount = 0;
+  if(values[0] === key.m1) correctCount++;
+  if(values[1] === key.m2) correctCount++;
+  if(values[2] === key.m3) correctCount++;
+  const ok = (correctCount === 3);
+
+  const isFirst = !(n in attempted);
+  if(isFirst){ attempted[n]=true; firstCorrect[n]=ok; }
+
+  const msg = ok ? 'Richtig ✅' : ('Teilweise richtig: ' + correctCount + ' / 3 Zuordnungen korrekt.');
+  setFeedback(n, ok, isFirst, msg);
+  afterCheck(n, ok);
+  if(solutionUnlocked[n] && window.MathJax) MathJax.typesetPromise();
+  saveState();
+}
+
+/* Cloze: mapping über key k1..k6 passend zu names-Reihenfolge */
+function checkCloze(n, key, names){
+  const values = names.map(x => document.querySelector('select[name="'+x+'"]').value);
+  if(values.some(v => v === '')){
+    const el=document.getElementById('f'+n);
+    el.className='feedback bad';
+    el.textContent='Bitte fülle alle Lücken aus.';
+    cacheFeedback(n, false, el.textContent);
+    scheduleSave();
+    return;
+  }
+  let correctCount = 0;
+  if(values[0] === key.k1) correctCount++;
+  if(values[1] === key.k2) correctCount++;
+  if(values[2] === key.k3) correctCount++;
+  if(values[3] === key.k4) correctCount++;
+  if(values[4] === key.k5) correctCount++;
+  if(values[5] === key.k6) correctCount++;
+  const ok = (correctCount === 6);
+
+  const isFirst = !(n in attempted);
+  if(isFirst){ attempted[n]=true; firstCorrect[n]=ok; }
+
+  const msg = ok ? 'Richtig ✅' : ('Teilweise richtig: ' + correctCount + ' / 6 Lücken korrekt.');
+  setFeedback(n, ok, isFirst, msg);
+  afterCheck(n, ok);
+  if(solutionUnlocked[n] && window.MathJax) MathJax.typesetPromise();
+  saveState();
+}
+
+function resetUI(n){
+  const sec=document.querySelector('section[data-task="'+n+'"]');
+  sec.querySelectorAll('input').forEach(i=>i.checked=false);
+  sec.querySelectorAll('select').forEach(s=>s.value='');
+
+  const f=document.getElementById('f'+n);
+  if(f){ f.textContent=''; f.className='feedback'; }
+  delete feedbackCache[n];
+  scheduleSave();
+}
+
+function toggleSolution(n){
+  const sol=document.getElementById('sol'+n);
+  sol.style.display = (sol.style.display==='block') ? 'none' : 'block';
+  if(window.MathJax) MathJax.typesetPromise();
+}
+
+function showScore(){
+  const d = computeDetail();
+  const s=document.getElementById('score');
+  s.className='feedback';
+  s.textContent =
+    "Kurs: " + COURSE_NAME + " | Arbeitsblatt: " + SHEET_ID + " | " +
+    "Beim ersten Versuch richtig: " + d.correctFirst + " / " + d.total +
+    "   (bereits geprüft: " + d.attemptedCount + " / " + d.total + ")" +
+    "   | Richtig: [" + d.firstCorrectTasks.join(",") + "]" +
+    "   | Falsch: [" + d.firstWrongTasks.join(",") + "]";
+  scheduleSave();
+}
+
+function showInfo(){
+  const lines = [];
+  lines.push("• Mitgesendet: Name, Kurs (fest), Arbeitsblatt-ID (fest), Score, Erstversuch-Listen, Startzeit, Sendezeit, Arbeitszeit, UserAgent.");
+  lines.push("• Kurs: " + COURSE_NAME);
+  lines.push("• Arbeitsblatt: " + SHEET_ID);
+  if(startedAtISO) lines.push("• Startzeit: " + startedAtISO);
+  if(lastSent && lastSent.ts) lines.push("• Letztes Senden: " + lastSent.ts);
+  document.getElementById('info').textContent = lines.join("  ");
+}
+
+/* ==================== BOOT ==================== */
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('metaCourse').textContent = COURSE_NAME;
+  document.getElementById('metaSheet').textContent = SHEET_ID;
+
+  const st0 = loadState();
+  if(st0 && typeof st0.startedAtISO === "string") {
+    startedAtISO = st0.startedAtISO;
+  } else {
+    startedAtISO = new Date().toISOString();
+  }
+
+  ensureSeed();
+  shuffleMCBlocks();
+
+  const st = loadState();
+  if(st){
+    if(typeof st.studentName === "string"){
+      studentName = st.studentName;
+      const inp = document.getElementById('studentName');
+      if(inp) inp.value = studentName;
+    }
+
+    if(st.lastSent) lastSent = st.lastSent;
+
+    if(st.attempted) Object.assign(attempted, st.attempted);
+    if(st.firstCorrect) Object.assign(firstCorrect, st.firstCorrect);
+    if(st.wrongStreak) Object.assign(wrongStreak, st.wrongStreak);
+    if(st.solutionUnlocked) Object.assign(solutionUnlocked, st.solutionUnlocked);
+    if(st.feedbackCache) Object.assign(feedbackCache, st.feedbackCache);
+
+    applyInputs(st.inputs);
+    applySelects(st.selects);
+    applyFeedback();
+  }
+
+  document.getElementById('studentName').addEventListener('input', updateSendBtn);
+  document.getElementById('studentName').addEventListener('change', updateSendBtn);
+  updateSendBtn();
+
+  attachAutoSave();
+  saveState();
+
+  if(window.MathJax) MathJax.typesetPromise();
+});
+</script>
+
+</body>
+</html>
