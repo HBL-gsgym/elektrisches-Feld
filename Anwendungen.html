@@ -1,0 +1,1288 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Arbeitsblatt – Kondensator Anwendungen</title>
+
+<!-- MathJax (einzige externe Library erlaubt) -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)'], ['$', '$']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+  :root{
+    --ink:#111;
+    --muted:#555;
+    --line:#d9d9d9;
+    --soft:#f6f7f9;
+    --card:#fff;
+    --accent:#0b57d0;
+    --good:#0a7a2f;
+    --bad:#b00020;
+    --warn:#8a5a00;
+    --shadow: 0 10px 30px rgba(0,0,0,.08);
+    --radius: 18px;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font: 14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 700px at 20% 0%, rgba(11,87,208,.07), transparent 60%),
+      radial-gradient(900px 600px at 90% 30%, rgba(11,87,208,.06), transparent 55%),
+      linear-gradient(180deg, #fbfcff, #f3f6ff);
+  }
+
+  .wrap{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 18px 14px 40px;
+  }
+
+  /* Kopfzeile */
+  .topbar{
+    display:grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items:center;
+    gap:10px;
+    padding:12px 14px;
+    border:1px solid var(--line);
+    border-radius: 16px;
+    background: rgba(255,255,255,.85);
+    backdrop-filter: blur(6px);
+    box-shadow: var(--shadow);
+  }
+  .topbar .left{font-weight:800; letter-spacing:.5px;}
+  .topbar .center{ text-align:center; font-weight:700; color:#1b1b1b;}
+  .topbar .right{ text-align:right; color:transparent; user-select:none; }
+
+  h1{
+    margin: 18px 2px 8px;
+    font-size: 26px;
+    line-height: 1.15;
+    letter-spacing: -0.3px;
+  }
+
+  .rulebox{
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.85);
+    border-radius: 14px;
+    padding: 12px 14px;
+    color: var(--muted);
+    box-shadow: 0 6px 18px rgba(0,0,0,.06);
+  }
+  .rulebox b{color:var(--ink)}
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 14px;
+  }
+
+  .panel{
+    border:1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px;
+    background: rgba(255,255,255,.90);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+  }
+
+  /* Name + Score */
+  .meta{
+    display:grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  @media (max-width: 760px){
+    .meta{ grid-template-columns: 1fr; }
+  }
+  .fieldrow{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+  label{font-weight:700}
+  input[type="text"]{
+    flex:1;
+    min-width: 220px;
+    border:1px solid var(--line);
+    border-radius: 12px;
+    padding: 10px 12px;
+    font: inherit;
+    background:#fff;
+  }
+
+  .btnrow{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:10px;
+  }
+  button{
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius: 12px;
+    padding: 9px 12px;
+    font: inherit;
+    cursor:pointer;
+    box-shadow: 0 6px 16px rgba(0,0,0,.06);
+  }
+  button.primary{
+    border-color: rgba(11,87,208,.25);
+    background: rgba(11,87,208,.08);
+    color:#0b2f7a;
+    font-weight:700;
+  }
+  button:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+    box-shadow:none;
+  }
+
+  .scorebox{
+    border:1px solid var(--line);
+    border-radius: 14px;
+    padding: 12px 14px;
+    background: rgba(255,255,255,.92);
+  }
+  .scoreline{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:baseline;
+  }
+  .scoreline .big{
+    font-size: 18px;
+    font-weight:800;
+    letter-spacing:-.2px;
+  }
+  .muted{color:var(--muted)}
+  .small{font-size: 12px; color:var(--muted)}
+  .status{
+    margin-top:8px;
+    padding:8px 10px;
+    border-radius: 12px;
+    border:1px solid var(--line);
+    background: rgba(246,247,249,.9);
+    color: var(--muted);
+  }
+
+  /* Aufgaben */
+  .task{
+    border:1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+  }
+
+  /* unterschiedliche helle Kartenfarben */
+  .task:nth-of-type(1){ background: rgba(255,255,255,.95); }
+  .task:nth-of-type(2){ background: rgba(240,250,255,.92); }
+  .task:nth-of-type(3){ background: rgba(244,255,246,.92); }
+  .task:nth-of-type(4){ background: rgba(255,248,240,.92); }
+  .task:nth-of-type(5){ background: rgba(247,244,255,.92); }
+  .task:nth-of-type(6){ background: rgba(255,245,250,.92); }
+  .task:nth-of-type(7){ background: rgba(244,252,255,.92); }
+  .task:nth-of-type(8){ background: rgba(252,252,244,.92); }
+
+  .taskhead{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:flex-start;
+    margin-bottom: 10px;
+  }
+  .tasktitle{
+    font-weight:900;
+    letter-spacing:-.2px;
+  }
+  .pill{
+    border:1px solid var(--line);
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: var(--muted);
+    background: rgba(255,255,255,.7);
+    white-space:nowrap;
+  }
+
+  .choices{
+    display:grid;
+    gap:8px;
+    margin: 10px 0 8px;
+  }
+  .choice{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    border:1px solid rgba(217,217,217,.9);
+    border-radius: 14px;
+    padding: 10px 10px;
+    background: rgba(255,255,255,.65);
+  }
+  .choice input{margin-top:2px}
+
+  .matchgrid{
+    display:grid;
+    gap:10px;
+    margin-top:10px;
+  }
+  .matchrow{
+    display:grid;
+    grid-template-columns: 1.2fr .8fr;
+    gap:10px;
+    align-items:center;
+  }
+  @media (max-width: 640px){
+    .matchrow{ grid-template-columns: 1fr; }
+  }
+  select{
+    width:100%;
+    border:1px solid var(--line);
+    border-radius: 12px;
+    padding: 9px 10px;
+    background:#fff;
+    font: inherit;
+  }
+  .cloze{
+    margin-top: 10px;
+    padding: 12px 12px;
+    border:1px solid rgba(217,217,217,.9);
+    border-radius: 14px;
+    background: rgba(255,255,255,.65);
+  }
+  .cloze .blank{
+    display:inline-block;
+    vertical-align:middle;
+    min-width: 220px;
+    margin: 0 6px;
+  }
+  @media (max-width: 520px){
+    .cloze .blank{ min-width: 160px; }
+  }
+
+  .feedback{
+    margin-top: 10px;
+    border-radius: 14px;
+    padding: 10px 12px;
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.7);
+  }
+  .feedback.good{ border-color: rgba(10,122,47,.25); background: rgba(10,122,47,.06); }
+  .feedback.bad{ border-color: rgba(176,0,32,.22); background: rgba(176,0,32,.05); }
+  .feedback.warn{ border-color: rgba(138,90,0,.22); background: rgba(138,90,0,.05); }
+  .fbtitle{ font-weight:900; margin-bottom:4px; }
+  .fbmeta{ font-size: 12px; color: var(--muted); margin-top:4px; }
+
+  .actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top: 10px;
+  }
+
+  details.solution{
+    margin-top: 10px;
+    border:1px solid var(--line);
+    border-radius: 14px;
+    background: rgba(255,255,255,.7);
+    padding: 0;
+    overflow:hidden;
+  }
+  details.solution summary{
+    cursor:pointer;
+    list-style:none;
+    padding: 10px 12px;
+    font-weight:800;
+    user-select:none;
+    background: rgba(246,247,249,.8);
+    border-bottom:1px solid var(--line);
+  }
+  details.solution summary::-webkit-details-marker{ display:none; }
+  .solbody{
+    padding: 10px 12px;
+    color: var(--muted);
+  }
+  .solbody b{ color: var(--ink); }
+
+  .hidden{ display:none !important; }
+
+  /* Druck */
+  @media print{
+    body{ background:#fff !important; }
+    .topbar, .rulebox, .panel, .task{ box-shadow:none !important; background:#fff !important; }
+    button, .btnrow, .actions, .status, details.solution summary{ display:none !important; }
+    details.solution{ border:none !important; }
+    details.solution[open] .solbody{ padding:0 !important; }
+    input, select{ border:1px solid #000 !important; }
+  }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="topbar" aria-label="Kopfzeile">
+    <div class="left">HBL</div>
+    <div class="center" id="courseName"></div>
+    <div class="right">.</div>
+  </div>
+
+  <h1 id="sheetTitle"></h1>
+
+  <div class="rulebox">
+    <b>Regeln:</b> Trage deinen Namen ein. Prüfe jede Aufgabe selbstständig. Für die Bewertung zählt pro Aufgabe nur der <b>erste</b> Prüfdurchlauf.
+    Nach <b>3 Fehlversuchen hintereinander</b> kannst du dir den Lösungsweg einblenden.
+  </div>
+
+  <div class="grid">
+    <div class="panel meta">
+      <div>
+        <div class="fieldrow">
+          <label for="studentName">Name (Pflicht):</label>
+          <input id="studentName" type="text" autocomplete="name" placeholder="Vorname Nachname" />
+        </div>
+
+        <div class="btnrow">
+          <button class="primary" id="sendBtn" disabled>Ergebnisse an HBL senden</button>
+          <button id="resetAllBtn" title="Setzt nur Auswahl/Anzeige zurück – nicht die Erstversuch-Wertung.">Anzeige zurücksetzen</button>
+        </div>
+
+        <div class="small" style="margin-top:8px">
+          Kurs &amp; Arbeitsblatt sind fest hinterlegt. Gesendet werden nur Name + Auswertung.
+        </div>
+      </div>
+
+      <div class="scorebox">
+        <div class="scoreline">
+          <div class="big">Score</div>
+          <div class="big" id="scoreText">0/8</div>
+        </div>
+        <div class="muted" id="attemptText">Versuche (Erstcheck): 0/8</div>
+        <div class="status" id="sendStatus">Noch nicht gesendet.</div>
+        <div class="small" id="timeInfo"></div>
+      </div>
+    </div>
+
+    <!-- Aufgabencontainer -->
+    <div id="tasks"></div>
+
+  </div>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  // ===== FESTE VORGABEN =====
+  const COURSE_NAME = "Ph GK 11 2025";
+  const SHEET_ID = "Kondensator Anwendungen";
+  const SHEET_TITLE = "Kondensator – Anwendungen";
+  // WebApp-URL wie in eurem bisherigen Standard:
+  const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxHBL_STANDARD_WEBAPP/exec";
+
+  // ===== Storage =====
+  const LS_KEY = `HBL_AB::${COURSE_NAME}::${SHEET_ID}`;
+  const nowISO = () => new Date().toISOString();
+
+  const stateDefault = () => ({
+    version: 1,
+    course: COURSE_NAME,
+    sheetId: SHEET_ID,
+    studentName: "",
+    baseSeed: null,
+    startTimeISO: null,
+    // pro Aufgabe:
+    tasks: {},
+    // Status/Sendung:
+    lastSendISO: null,
+    lastSendOk: false,
+    sendMsg: "Noch nicht gesendet."
+  });
+
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(LS_KEY);
+      if(!raw) return stateDefault();
+      const parsed = JSON.parse(raw);
+      // Minimaler Merge:
+      const base = stateDefault();
+      return {
+        ...base,
+        ...parsed,
+        tasks: parsed.tasks && typeof parsed.tasks === "object" ? parsed.tasks : {}
+      };
+    }catch{
+      return stateDefault();
+    }
+  }
+
+  function saveState(){
+    localStorage.setItem(LS_KEY, JSON.stringify(state));
+  }
+
+  let state = loadState();
+
+  // Startzeit setzen (nur einmal)
+  if(!state.startTimeISO){
+    state.startTimeISO = nowISO();
+    saveState();
+  }
+
+  // Seed setzen (nur einmal)
+  if(!state.baseSeed){
+    state.baseSeed = (crypto.getRandomValues(new Uint32Array(1))[0] >>> 0);
+    saveState();
+  }
+
+  // ===== RNG (deterministisch) =====
+  function mulberry32(a){
+    return function(){
+      let t = a += 0x6D2B79F5;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function hashString(str){
+    let h = 2166136261;
+    for(let i=0;i<str.length;i++){
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return h >>> 0;
+  }
+
+  function seededRngFor(taskId, salt=""){
+    const h = hashString(`${taskId}::${salt}`);
+    return mulberry32((state.baseSeed ^ h) >>> 0);
+  }
+
+  function shuffle(arr, rng){
+    const a = arr.slice();
+    for(let i=a.length-1; i>0; i--){
+      const j = Math.floor(rng() * (i+1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // ===== Aufgaben-Daten =====
+  // Hinweis: Optionen werden pro Gerät deterministisch randomisiert (Seed).
+  const TASKS = [
+    {
+      id:"t1",
+      type:"mc_single",
+      title:"Smartphone – Warum erkennt es die Berührposition?",
+      prompt:"Warum kann ein Smartphone erkennen, <b>wo</b> du den Bildschirm berührst?",
+      choices:[
+        {k:"A", text:"Weil sich dort der elektrische Widerstand ändert", correct:false},
+        {k:"B", text:"Weil unter dem Display viele Kondensatorstrukturen sitzen", correct:true},
+        {k:"C", text:"Weil der Finger Wärme abgibt", correct:false},
+        {k:"D", text:"Weil der Bildschirm magnetisch ist", correct:false}
+      ],
+      solution:{
+        short:"Unter dem Display liegen viele kapazitive Strukturen. Die Berührung verändert lokal die Kapazität/elektrische Situation.",
+        long:"Ein kapazitiver Touchscreen besteht aus vielen kleinen Kondensatorstrukturen. Der Finger wirkt elektrisch als Einfluss/„Gegenfläche“. Dadurch ändert sich lokal die Kapazität bzw. das Messsignal – aus der Verteilung lässt sich die Position bestimmen."
+      }
+    },
+    {
+      id:"t2",
+      type:"mc_single",
+      title:"Computertastatur – Was ändert sich beim Drücken?",
+      prompt:"Was ändert sich beim Drücken einer Taste in einer (kapazitiven) Computertastatur?",
+      choices:[
+        {k:"A", text:"Die Ladung verschwindet", correct:false},
+        {k:"B", text:"Der Plattenabstand (bzw. die Geometrie) im Kondensator ändert sich", correct:true},
+        {k:"C", text:"Die Metallplatte wird magnetisch", correct:false},
+        {k:"D", text:"Der Strom fließt dauerhaft", correct:false}
+      ],
+      solution:{
+        short:"Durch den Tastendruck ändert sich der Abstand/ die Geometrie – dadurch ändert sich das kapazitive Signal.",
+        long:"Unter der Taste ist eine Kondensatorstruktur. Wird die Taste gedrückt, ändern sich Abstand/Überdeckung der Flächen. Damit ändert sich Kapazität und das Messsignal – die Elektronik erkennt den Tastendruck."
+      }
+    },
+    {
+      id:"t3",
+      type:"mc_multi",
+      title:"Touchscreen – Funktionsweise (Mehrfachauswahl)",
+      prompt:"Welche Aussagen beschreiben die Funktionsweise eines kapazitiven Touchscreens richtig? (mehrere richtig)",
+      choices:[
+        {k:"A", text:"Unter dem Display befinden sich viele Kondensatorstrukturen", correct:true},
+        {k:"B", text:"Der Finger wirkt elektrisch wie eine zweite Platte / beeinflusst das Feld", correct:true},
+        {k:"C", text:"Die Position wird über Temperatur gemessen", correct:false},
+        {k:"D", text:"Durch Berührung ändert sich lokal das elektrische Messsignal", correct:true}
+      ],
+      solution:{
+        short:"Kapazitive Strukturen + Finger als Einfluss → lokale Signaländerung → Position.",
+        long:"Ein kapazitiver Touchscreen arbeitet mit vielen Kondensatorstrukturen. Der Finger koppelt elektrisch ein (wirkt wie eine Gegenfläche bzw. verändert die Feldverteilung). Dadurch entsteht eine ortsabhängige Signaländerung, aus der die Position berechnet wird."
+      }
+    },
+    {
+      id:"t4",
+      type:"match_dropdown",
+      title:"Zuordnung – Gerät ↔ Prinzip",
+      prompt:"Ordne zu: <b>Gerät</b> → <b>Wirkung</b> (Dropdowns).",
+      left:[
+        {id:"A", text:"Computertastatur"},
+        {id:"B", text:"Sensortaste (Touch-Button)"},
+        {id:"C", text:"Defibrillator"}
+      ],
+      right:[
+        {id:"1", text:"Abstand/Geometrie der Kondensatorplatten ändert sich"},
+        {id:"2", text:"Finger wirkt als „zweite Platte“ / beeinflusst kapazitiv"},
+        {id:"3", text:"Schnelle Entladung gespeicherter elektrischer Energie"}
+      ],
+      correctMap: {A:"1", B:"2", C:"3"},
+      solution:{
+        short:"Tastatur: Abstand/Geometrie • Sensortaste: Finger als Einfluss • Defi: schnelle Entladung.",
+        long:"Computertastatur: Tastendruck verändert Abstand/Geometrie → Kapazitätssignal. Sensortaste: Finger koppelt kapazitiv ein → Signaländerung. Defibrillator: Kondensator speichert Energie und entlädt sie sehr schnell."
+      }
+    },
+    {
+      id:"t5",
+      type:"mc_single",
+      title:"Defibrillator – Warum so hohe Leistung?",
+      prompt:"Warum kann ein Defibrillator trotz Akku kurzfristig sehr hohe Leistung abgeben?",
+      choices:[
+        {k:"A", text:"Weil der Akku besonders groß ist", correct:false},
+        {k:"B", text:"Weil elektrische Energie im Kondensator gespeichert und sehr schnell entladen wird", correct:true},
+        {k:"C", text:"Weil der Strom dauerhaft sehr groß ist", correct:false},
+        {k:"D", text:"Weil mehrere Batterien gleichzeitig arbeiten", correct:false}
+      ],
+      solution:{
+        short:"Energie wird im Kondensator „gepuffert“ und dann in sehr kurzer Zeit abgegeben.",
+        long:"Der Akku lädt einen Kondensator auf. Diese gespeicherte elektrische Energie kann anschließend in sehr kurzer Zeit entladen werden – dadurch entsteht kurzfristig eine sehr hohe Leistung."
+      }
+    },
+    {
+      id:"t6",
+      type:"mc_single",
+      title:"Funke – Platten vorher auseinanderziehen",
+      prompt:"Zwei geladene Metallplatten werden per Funken entladen. Was passiert mit der Funkenstärke, wenn man die Platten <b>vorher auseinanderzieht</b>?",
+      choices:[
+        {k:"A", text:"Der Funke wird schwächer", correct:false},
+        {k:"B", text:"Der Funke bleibt gleich", correct:false},
+        {k:"C", text:"Der Funke wird stärker", correct:true},
+        {k:"D", text:"Es entsteht kein Funke mehr", correct:false}
+      ],
+      solution:{
+        short:"Beim Auseinanderziehen steigt die Spannung – die Entladung kann „heftiger“ ausfallen.",
+        long:"Wird ein geladener Kondensator (abgekoppelt) auseinandergezogen, steigt die Spannung zwischen den Platten. Beim anschließenden Entladen kann die Entladung daher stärker wirken."
+      }
+    },
+    {
+      id:"t7",
+      type:"mc_multi",
+      title:"Isolator im Kondensator – wozu im Alltag?",
+      prompt:"Warum werden in realen Kondensatoren Isolatoren (Dielektrika) eingesetzt? (mehrere richtig)",
+      choices:[
+        {k:"A", text:"Um mehr elektrische Energie speichern zu können", correct:true},
+        {k:"B", text:"Weil dadurch bei gleicher Spannung mehr Ladung gespeichert werden kann", correct:true},
+        {k:"C", text:"Um den Kondensator magnetisch zu machen", correct:false},
+        {k:"D", text:"Um die Baugröße klein zu halten (bei gleicher Kapazität)", correct:true}
+      ],
+      solution:{
+        short:"Dielektrikum erhöht das Speichervermögen und ermöglicht kompakte Bauformen.",
+        long:"Ein Dielektrikum erhöht die Kapazität: Bei gleicher Spannung kann mehr Ladung gespeichert werden (oder bei gleicher Ladung sinkt die Spannung). Damit kann man bei gleicher Kapazität kleiner bauen bzw. mehr Energie puffern."
+      }
+    },
+    {
+      id:"t8",
+      type:"cloze_dropdown",
+      title:"Lückentext – Blitz/Defi (Alltagssprache)",
+      prompt:"Fülle die Lücken mit den passenden Begriffen.",
+      // Cloze als Segmente: Text + Dropdown + Text + Dropdown ...
+      segments:[
+        {t:"Ein Kondensator speichert ", dd:"dd1"},
+        {t:". In vielen Geräten wird diese Energie ", dd:"dd2"},
+        {t:" gespeichert und gezielt ", dd:"dd3"},
+        {t:" wieder abgegeben, z. B. im ", dd:"dd4"},
+        {t:" oder im ", dd:"dd5"},
+        {t:"."}
+      ],
+      dropdowns:{
+        dd1: {correct:"elektrische Energie", options:["elektrische Energie","magnetische Energie","Wärmeenergie","kinetische Energie"]},
+        dd2: {correct:"kurzzeitig", options:["kurzzeitig","jahrelang","gar nicht","nur im Betrieb"]},
+        dd3: {correct:"schnell", options:["schnell","langsam","zufällig","niemals"]},
+        dd4: {correct:"Defibrillator", options:["Defibrillator","Wasserkocher","Lautsprecher","Thermometer"]},
+        dd5: {correct:"Kamerablitz", options:["Kamerablitz","Kühlschrank","Toaster","Uhrwerk"]}
+      },
+      solution:{
+        short:"elektrische Energie • kurzzeitig • schnell • Defibrillator • Kamerablitz",
+        long:"Kondensatoren speichern elektrische Energie. Diese wird häufig kurzzeitig gepuffert und dann schnell abgegeben – z. B. Kamerablitz oder Defibrillator."
+      }
+    }
+  ];
+
+  // ===== DOM =====
+  const courseNameEl = document.getElementById("courseName");
+  const sheetTitleEl = document.getElementById("sheetTitle");
+  const studentNameEl = document.getElementById("studentName");
+  const sendBtn = document.getElementById("sendBtn");
+  const resetAllBtn = document.getElementById("resetAllBtn");
+  const tasksEl = document.getElementById("tasks");
+  const scoreText = document.getElementById("scoreText");
+  const attemptText = document.getElementById("attemptText");
+  const sendStatus = document.getElementById("sendStatus");
+  const timeInfo = document.getElementById("timeInfo");
+
+  courseNameEl.textContent = COURSE_NAME;
+  sheetTitleEl.textContent = SHEET_TITLE;
+
+  // ===== Task-State init =====
+  function taskStateInit(taskId){
+    if(!state.tasks[taskId]){
+      state.tasks[taskId] = {
+        firstChecked: false,
+        firstCorrect: null, // true/false
+        failStreak: 0,
+        solutionUnlocked: false,
+        solutionOpen: false,
+        feedback: null, // {type, title, body, meta}
+        // Inputs:
+        input: null,
+        // For shuffled order persistence:
+        order: null
+      };
+      saveState();
+    }
+    return state.tasks[taskId];
+  }
+
+  // ===== Rendering helpers =====
+  function el(tag, attrs={}, children=[]){
+    const e = document.createElement(tag);
+    for(const [k,v] of Object.entries(attrs)){
+      if(k === "class") e.className = v;
+      else if(k === "html") e.innerHTML = v;
+      else if(k.startsWith("on") && typeof v === "function") e.addEventListener(k.slice(2), v);
+      else e.setAttribute(k, v);
+    }
+    for(const c of children){
+      if(typeof c === "string") e.appendChild(document.createTextNode(c));
+      else if(c) e.appendChild(c);
+    }
+    return e;
+  }
+
+  function formatDurationSec(sec){
+    const s = Math.max(0, Math.floor(sec));
+    const mm = Math.floor(s/60);
+    const ss = s%60;
+    return `${mm}:${String(ss).padStart(2,'0')}`;
+  }
+
+  function getWorkSeconds(){
+    const start = new Date(state.startTimeISO).getTime();
+    const end = Date.now();
+    return Math.max(0, Math.floor((end-start)/1000));
+  }
+
+  // ===== Score =====
+  function computeScore(){
+    let total = TASKS.length;
+    let attempted = 0;
+    let score = 0;
+    const correctIds = [];
+    const wrongIds = [];
+
+    for(const t of TASKS){
+      const ts = taskStateInit(t.id);
+      if(ts.firstChecked){
+        attempted++;
+        if(ts.firstCorrect === true){
+          score++;
+          correctIds.push(t.id);
+        }else if(ts.firstCorrect === false){
+          wrongIds.push(t.id);
+        }
+      }
+    }
+    return {score, total, attempted, correctIds, wrongIds};
+  }
+
+  function updateScoreUI(extraMsg){
+    const {score, total, attempted} = computeScore();
+    scoreText.textContent = `${score}/${total}`;
+    attemptText.textContent = `Versuche (Erstcheck): ${attempted}/${total}`;
+    sendStatus.textContent = extraMsg ? extraMsg : (state.sendMsg || "Noch nicht gesendet.");
+    timeInfo.textContent = `Arbeitszeit: ${formatDurationSec(getWorkSeconds())} (Start: ${new Date(state.startTimeISO).toLocaleString()})`;
+  }
+
+  // ===== Randomized orders =====
+  function ensureOrder(task){
+    const ts = taskStateInit(task.id);
+    if(ts.order) return ts.order;
+
+    const rng = seededRngFor(task.id, "order");
+
+    if(task.type === "mc_single" || task.type === "mc_multi"){
+      const idx = task.choices.map((_,i)=>i);
+      ts.order = {choiceIdx: shuffle(idx, rng)};
+    }else if(task.type === "match_dropdown"){
+      // Shuffle rows (left items) AND shuffle dropdown option order per row
+      const leftIdx = task.left.map((_,i)=>i);
+      const rightIds = task.right.map(r=>r.id);
+      const leftShuffled = shuffle(leftIdx, rng);
+      // right option order base:
+      const rightOrder = shuffle(rightIds, rng);
+      // per row order:
+      const rowOrders = {};
+      for(const li of leftIdx){
+        const rrng = seededRngFor(task.id, "rowopt::"+li);
+        rowOrders[li] = shuffle(rightIds, rrng);
+      }
+      ts.order = {leftIdx: leftShuffled, rightOrder, rowOrders};
+    }else if(task.type === "cloze_dropdown"){
+      const ddOrder = {};
+      for(const [ddKey, dd] of Object.entries(task.dropdowns)){
+        const drng = seededRngFor(task.id, "dd::"+ddKey);
+        ddOrder[ddKey] = shuffle(dd.options.slice(), drng);
+      }
+      ts.order = {ddOrder};
+    }else{
+      ts.order = {};
+    }
+    saveState();
+    return ts.order;
+  }
+
+  // ===== Feedback & Lösung =====
+  function setFeedback(taskId, fb){
+    const ts = taskStateInit(taskId);
+    ts.feedback = fb;
+    saveState();
+    renderAll(); // einfacher, zuverlässig
+  }
+
+  function unlockSolutionIfNeeded(taskId){
+    const ts = taskStateInit(taskId);
+    if(ts.failStreak >= 3){
+      ts.solutionUnlocked = true;
+      saveState();
+    }
+  }
+
+  function markFirstAttempt(taskId, isCorrect){
+    const ts = taskStateInit(taskId);
+    if(!ts.firstChecked){
+      ts.firstChecked = true;
+      ts.firstCorrect = !!isCorrect;
+      saveState();
+    }
+  }
+
+  // ===== Check-Logik pro Typ =====
+  function checkTask(task){
+    const ts = taskStateInit(task.id);
+
+    let isCorrect = false;
+    let fb = null;
+
+    if(task.type === "mc_single"){
+      const sel = (ts.input && ts.input.selected) ? ts.input.selected : null;
+      if(!sel){
+        fb = {type:"warn", title:"Noch nicht geprüft", body:"Bitte wähle eine Antwort aus.", meta:""};
+        setFeedback(task.id, fb);
+        return;
+      }
+      const correctKey = task.choices.find(c=>c.correct).k;
+      isCorrect = (sel === correctKey);
+
+      if(isCorrect){
+        fb = {type:"good", title:"Richtig ✅", body:"Das passt zur Anwendung.", meta:""};
+        ts.failStreak = 0;
+      }else{
+        ts.failStreak = (ts.failStreak||0) + 1;
+        const tries = ts.failStreak;
+        fb = {type:"bad", title:"Noch nicht richtig ❌", body:"Überlege: Wodurch ändert sich das kapazitive Messsignal in der Anwendung?", meta:`Fehlversuche in Folge: ${tries}/3`};
+      }
+      markFirstAttempt(task.id, isCorrect);
+      unlockSolutionIfNeeded(task.id);
+      ts.feedback = fb;
+      saveState();
+      renderAll();
+      return;
+    }
+
+    if(task.type === "mc_multi"){
+      const selSet = new Set((ts.input && Array.isArray(ts.input.selected)) ? ts.input.selected : []);
+      if(selSet.size === 0){
+        fb = {type:"warn", title:"Noch nicht geprüft", body:"Bitte wähle mindestens eine Antwort aus.", meta:""};
+        setFeedback(task.id, fb);
+        return;
+      }
+      const correctSet = new Set(task.choices.filter(c=>c.correct).map(c=>c.k));
+      // exakt richtig?
+      isCorrect = (selSet.size === correctSet.size) && [...selSet].every(k => correctSet.has(k));
+
+      // Teilfeedback:
+      const rightChosen = [...selSet].filter(k => correctSet.has(k));
+      const wrongChosen = [...selSet].filter(k => !correctSet.has(k));
+      const missing = [...correctSet].filter(k => !selSet.has(k));
+
+      const parts = [];
+      if(rightChosen.length) parts.push(`<b>Richtig gewählt:</b> ${rightChosen.join(", ")}`);
+      if(wrongChosen.length) parts.push(`<b>Falsch gewählt:</b> ${wrongChosen.join(", ")}`);
+      if(missing.length) parts.push(`<b>Fehlt noch:</b> ${missing.join(", ")}`);
+
+      if(isCorrect){
+        fb = {type:"good", title:"Richtig ✅", body: parts.join("<br>"), meta:""};
+        ts.failStreak = 0;
+      }else{
+        ts.failStreak = (ts.failStreak||0) + 1;
+        fb = {type:"bad", title:"Noch nicht vollständig richtig ❌", body: parts.join("<br>") || "Bitte prüfe deine Auswahl.", meta:`Fehlversuche in Folge: ${ts.failStreak}/3`};
+      }
+
+      markFirstAttempt(task.id, isCorrect);
+      unlockSolutionIfNeeded(task.id);
+      ts.feedback = fb;
+      saveState();
+      renderAll();
+      return;
+    }
+
+    if(task.type === "match_dropdown"){
+      const selMap = (ts.input && ts.input.map) ? ts.input.map : {};
+      const needed = task.left.map(x=>x.id);
+
+      if(!needed.every(k => selMap[k])){
+        fb = {type:"warn", title:"Noch nicht geprüft", body:"Bitte ordne in jeder Zeile eine Wirkung zu.", meta:""};
+        setFeedback(task.id, fb);
+        return;
+      }
+
+      // Bewertung: alle müssen stimmen
+      isCorrect = needed.every(k => selMap[k] === task.correctMap[k]);
+
+      // Feedback: je Zeile richtig/falsch
+      const lines = needed.map(k => {
+        const ok = selMap[k] === task.correctMap[k];
+        return `${ok ? "✅" : "❌"} <b>${k}</b> → ${selMap[k]}`;
+      }).join("<br>");
+
+      if(isCorrect){
+        fb = {type:"good", title:"Richtig ✅", body: lines, meta:""};
+        ts.failStreak = 0;
+      }else{
+        ts.failStreak = (ts.failStreak||0) + 1;
+        fb = {type:"bad", title:"Noch nicht richtig ❌", body: lines, meta:`Fehlversuche in Folge: ${ts.failStreak}/3`};
+      }
+
+      markFirstAttempt(task.id, isCorrect);
+      unlockSolutionIfNeeded(task.id);
+      ts.feedback = fb;
+      saveState();
+      renderAll();
+      return;
+    }
+
+    if(task.type === "cloze_dropdown"){
+      const answers = (ts.input && ts.input.dd) ? ts.input.dd : {};
+      const keys = Object.keys(task.dropdowns);
+      if(!keys.every(k => answers[k])){
+        fb = {type:"warn", title:"Noch nicht geprüft", body:"Bitte fülle alle Lücken aus.", meta:""};
+        setFeedback(task.id, fb);
+        return;
+      }
+      isCorrect = keys.every(k => answers[k] === task.dropdowns[k].correct);
+
+      const lineParts = keys.map(k => {
+        const ok = answers[k] === task.dropdowns[k].correct;
+        return `${ok ? "✅" : "❌"} <b>${k}</b>: ${answers[k]}`;
+      }).join("<br>");
+
+      if(isCorrect){
+        fb = {type:"good", title:"Richtig ✅", body: lineParts, meta:""};
+        ts.failStreak = 0;
+      }else{
+        ts.failStreak = (ts.failStreak||0) + 1;
+        fb = {type:"bad", title:"Noch nicht richtig ❌", body: lineParts, meta:`Fehlversuche in Folge: ${ts.failStreak}/3`};
+      }
+
+      markFirstAttempt(task.id, isCorrect);
+      unlockSolutionIfNeeded(task.id);
+      ts.feedback = fb;
+      saveState();
+      renderAll();
+      return;
+    }
+  }
+
+  // ===== Reset (nur Anzeige/Auswahl) =====
+  function resetTaskView(taskId){
+    const ts = taskStateInit(taskId);
+    // Auswahl + Feedback + offen/zu, aber KEINE Erstversuch-Wertung:
+    ts.feedback = null;
+    ts.solutionOpen = false;
+    // Eingaben zurücksetzen:
+    ts.input = null;
+    saveState();
+  }
+
+  function resetAllViews(){
+    for(const t of TASKS){
+      resetTaskView(t.id);
+    }
+    state.sendMsg = state.lastSendOk ? (state.sendMsg || "Gesendet ✅") : "Noch nicht gesendet.";
+    saveState();
+    renderAll();
+  }
+
+  // ===== Render tasks =====
+  function renderTask(task, index){
+    const ts = taskStateInit(task.id);
+    const order = ensureOrder(task);
+
+    const taskEl = el("div", {class:"task", "data-task":task.id});
+
+    const head = el("div", {class:"taskhead"}, [
+      el("div", {class:"tasktitle", html:`${index+1}. ${task.title}`}),
+      el("div", {class:"pill"}, [ts.firstChecked ? (ts.firstCorrect ? "Erstversuch: ✅" : "Erstversuch: ❌") : "Erstversuch: —"])
+    ]);
+
+    const prompt = el("div", {html: task.prompt});
+
+    taskEl.appendChild(head);
+    taskEl.appendChild(prompt);
+
+    // Content by type
+    if(task.type === "mc_single"){
+      const groupName = `radio_${task.id}`;
+      const choicesBox = el("div", {class:"choices"});
+      const idxOrder = order.choiceIdx;
+
+      // current selection
+      const selected = ts.input && ts.input.selected ? ts.input.selected : null;
+
+      idxOrder.forEach((ci) => {
+        const ch = task.choices[ci];
+        const row = el("label", {class:"choice"});
+        const inp = el("input", {type:"radio", name:groupName, value:ch.k});
+        if(selected === ch.k) inp.checked = true;
+
+        inp.addEventListener("change", () => {
+          ts.input = {selected: ch.k};
+          saveState();
+          // Kein sofortiges Feedback, erst beim Prüfen
+        });
+
+        row.appendChild(inp);
+        row.appendChild(el("div", {html:`<b>${ch.k}</b> ${ch.text}`}));
+        choicesBox.appendChild(row);
+      });
+
+      taskEl.appendChild(choicesBox);
+    }
+
+    if(task.type === "mc_multi"){
+      const choicesBox = el("div", {class:"choices"});
+      const idxOrder = order.choiceIdx;
+
+      const selectedArr = ts.input && Array.isArray(ts.input.selected) ? ts.input.selected : [];
+      const selectedSet = new Set(selectedArr);
+
+      idxOrder.forEach((ci) => {
+        const ch = task.choices[ci];
+        const row = el("label", {class:"choice"});
+        const inp = el("input", {type:"checkbox", value:ch.k});
+        if(selectedSet.has(ch.k)) inp.checked = true;
+
+        inp.addEventListener("change", () => {
+          const cur = new Set(ts.input && Array.isArray(ts.input.selected) ? ts.input.selected : []);
+          if(inp.checked) cur.add(ch.k);
+          else cur.delete(ch.k);
+          ts.input = {selected: [...cur].sort()};
+          saveState();
+        });
+
+        row.appendChild(inp);
+        row.appendChild(el("div", {html:`<b>${ch.k}</b> ${ch.text}`}));
+        choicesBox.appendChild(row);
+      });
+
+      taskEl.appendChild(choicesBox);
+    }
+
+    if(task.type === "match_dropdown"){
+      const match = el("div", {class:"matchgrid"});
+
+      // left rows randomized
+      const leftIdx = order.leftIdx;
+      const savedMap = (ts.input && ts.input.map) ? ts.input.map : {};
+      const leftByIdx = leftIdx.map(i => task.left[i]);
+
+      leftByIdx.forEach((leftItem) => {
+        const row = el("div", {class:"matchrow"});
+
+        const leftLabel = el("div", {html:`<b>${leftItem.id}</b> ${leftItem.text}`});
+
+        const sel = el("select", {});
+        sel.appendChild(el("option", {value:""}, ["— auswählen —"]));
+
+        // Dropdown option order (randomized per row -> verhindert A-1 / B-2 Muster)
+        const rowOrder = order.rowOrders[task.left.findIndex(x=>x.id===leftItem.id)] || order.rightOrder;
+        rowOrder.forEach((rid) => {
+          const r = task.right.find(x => x.id === rid);
+          sel.appendChild(el("option", {value:r.id}, [`${r.id}) ${r.text}`]));
+        });
+
+        if(savedMap[leftItem.id]) sel.value = savedMap[leftItem.id];
+
+        sel.addEventListener("change", () => {
+          const map = (ts.input && ts.input.map) ? {...ts.input.map} : {};
+          map[leftItem.id] = sel.value || "";
+          ts.input = {map};
+          saveState();
+        });
+
+        row.appendChild(leftLabel);
+        row.appendChild(sel);
+        match.appendChild(row);
+      });
+
+      taskEl.appendChild(match);
+    }
+
+    if(task.type === "cloze_dropdown"){
+      const box = el("div", {class:"cloze"});
+
+      const savedDD = (ts.input && ts.input.dd) ? ts.input.dd : {};
+      const ddOrder = order.ddOrder || {};
+
+      task.segments.forEach(seg => {
+        if(seg.t) box.appendChild(document.createTextNode(seg.t));
+        if(seg.dd){
+          const ddKey = seg.dd;
+          const dd = task.dropdowns[ddKey];
+
+          const span = el("span", {class:"blank"});
+          const sel = el("select", {});
+          sel.appendChild(el("option", {value:""}, ["— auswählen —"]));
+
+          const optOrder = ddOrder[ddKey] ? ddOrder[ddKey].slice() : dd.options.slice();
+          optOrder.forEach(opt => sel.appendChild(el("option", {value:opt}, [opt])));
+
+          if(savedDD[ddKey]) sel.value = savedDD[ddKey];
+
+          sel.addEventListener("change", () => {
+            const cur = (ts.input && ts.input.dd) ? {...ts.input.dd} : {};
+            cur[ddKey] = sel.value || "";
+            ts.input = {dd: cur};
+            saveState();
+          });
+
+          span.appendChild(sel);
+          box.appendChild(span);
+        }
+      });
+
+      taskEl.appendChild(box);
+    }
+
+    // Actions
+    const actions = el("div", {class:"actions"});
+
+    const checkBtn = el("button", {class:"primary"}, ["Prüfen"]);
+    checkBtn.addEventListener("click", () => checkTask(task));
+
+    const resetBtn = el("button", {}, ["Zurücksetzen"]);
+    resetBtn.title = "Setzt nur Auswahl/Anzeige dieser Aufgabe zurück – nicht die Erstversuch-Wertung.";
+    resetBtn.addEventListener("click", () => {
+      resetTaskView(task.id);
+      renderAll();
+    });
+
+    actions.appendChild(checkBtn);
+    actions.appendChild(resetBtn);
+
+    // Lösungsweg anzeigen (erst nach 3 Fehlversuchen in Folge)
+    const showWayBtn = el("button", {}, ["Lösungsweg anzeigen"]);
+    showWayBtn.classList.toggle("hidden", !ts.solutionUnlocked);
+    showWayBtn.addEventListener("click", () => {
+      ts.solutionOpen = !ts.solutionOpen;
+      saveState();
+      renderAll();
+    });
+    actions.appendChild(showWayBtn);
+
+    taskEl.appendChild(actions);
+
+    // Feedback box
+    if(ts.feedback){
+      const fb = ts.feedback;
+      const fbEl = el("div", {class:`feedback ${fb.type || ""}`}, [
+        el("div", {class:"fbtitle"}, [fb.title || "Feedback"]),
+        el("div", {html: fb.body || ""}),
+        fb.meta ? el("div", {class:"fbmeta"}, [fb.meta]) : null
+      ]);
+      taskEl.appendChild(fbEl);
+    }
+
+    // Lösung (per details, aber erst nach Freischaltung aufklappbar)
+    const details = el("details", {class:"solution"});
+    if(ts.solutionUnlocked && ts.solutionOpen) details.open = true;
+
+    const sumText = ts.solutionUnlocked ? "Lösung & Lösungsweg (ein-/ausklappen)" : "Lösung (nach 3 Fehlversuchen verfügbar)";
+    const summary = el("summary", {}, [sumText]);
+
+    const solBody = el("div", {class:"solbody", html: `
+      <b>Kurz:</b> ${task.solution.short}<br><br>
+      <b>Erklärung:</b> ${task.solution.long}
+    `});
+
+    details.appendChild(summary);
+    details.appendChild(solBody);
+
+    // Wenn nicht freigeschaltet: summary nicht interaktiv (bleibt zu)
+    if(!ts.solutionUnlocked){
+      details.addEventListener("toggle", (e) => {
+        if(details.open){
+          details.open = false;
+        }
+      });
+    }else{
+      // Sync open state to storage
+      details.addEventListener("toggle", () => {
+        ts.solutionOpen = details.open;
+        saveState();
+      });
+    }
+
+    taskEl.appendChild(details);
+
+    return taskEl;
+  }
+
+  function renderAll(){
+    // Name setzen
+    studentNameEl.value = state.studentName || "";
+    sendBtn.disabled = !(state.studentName && state.studentName.trim().length > 0);
+
+    // Tasks
+    tasksEl.innerHTML = "";
+    TASKS.forEach((t, i) => tasksEl.appendChild(renderTask(t, i)));
+
+    // Score
+    updateScoreUI();
+
+    // MathJax re-typeset (falls nötig)
+    if(window.MathJax && window.MathJax.typesetPromise){
+      window.MathJax.typesetPromise();
+    }
+  }
+
+  // ===== Name input =====
+  studentNameEl.addEventListener("input", () => {
+    state.studentName = studentNameEl.value.trim();
+    saveState();
+    sendBtn.disabled = !(state.studentName && state.studentName.length > 0);
+  });
+
+  // ===== Reset all views =====
+  resetAllBtn.addEventListener("click", resetAllViews);
+
+  // ===== Send =====
+  async function postJSON(url, data){
+    // Versuch 1: CORS-fähig (wenn WebApp korrekt konfiguriert)
+    try{
+      const r = await fetch(url, {
+        method:"POST",
+        headers: {"Content-Type":"application/json"},
+        mode:"cors",
+        body: JSON.stringify(data)
+      });
+      // Viele WebApps antworten mit 200/redirect/opaque – wir behandeln "ok-ish"
+      return {ok: r.ok, status: r.status};
+    }catch(e1){
+      // Fallback: no-cors (liefert opaque, aber Request geht raus)
+      try{
+        await fetch(url, {
+          method:"POST",
+          mode:"no-cors",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify(data)
+        });
+        return {ok:true, status: 0};
+      }catch(e2){
+        return {ok:false, status:-1, err: String(e2 && e2.message ? e2.message : e2)};
+      }
+    }
+  }
+
+  function buildSendPayload(){
+    const {score, total, attempted, correctIds, wrongIds} = computeScore();
+    const sendISO = nowISO();
+    const workSec = getWorkSeconds();
+
+    // Details pro Aufgabe (nur Erstversuch-Status + Typ)
+    const details = TASKS.map(t => {
+      const ts = taskStateInit(t.id);
+      return {
+        id: t.id,
+        type: t.type,
+        firstChecked: !!ts.firstChecked,
+        firstCorrect: ts.firstCorrect === true ? true : (ts.firstCorrect === false ? false : null),
+        failStreak: ts.failStreak || 0
+      };
+    });
+
+    return {
+      name: (state.studentName || "").trim(),
+      course: COURSE_NAME,
+      sheetId: SHEET_ID,
+      score: `${score}/${total}`,
+      attemptedCount: attempted,
+      firstTryCorrect: correctIds,
+      firstTryWrong: wrongIds,
+      startTimeISO: state.startTimeISO,
+      sendTimeISO: sendISO,
+      workSeconds: workSec,
+      userAgent: navigator.userAgent || "",
+      details
+    };
+  }
+
+  sendBtn.addEventListener("click", async () => {
+    const name = (state.studentName || "").trim();
+    if(!name){
+      updateScoreUI("Bitte Name eintragen.");
+      return;
+    }
+
+    const payload = buildSendPayload();
+    const res = await postJSON(WEBAPP_URL, payload);
+
+    state.lastSendISO = nowISO();
+    state.lastSendOk = !!res.ok;
+
+    const stamp = new Date(state.lastSendISO).toLocaleString();
+    if(res.ok){
+      state.sendMsg = `Gesendet ✅ ${stamp}`;
+    }else{
+      state.sendMsg = `Senden fehlgeschlagen ❌ (${res.status}) ${stamp}`;
+    }
+    saveState();
+    updateScoreUI(state.sendMsg);
+  });
+
+  // ===== Init =====
+  renderAll();
+})();
+</script>
+
+</body>
+</html>
